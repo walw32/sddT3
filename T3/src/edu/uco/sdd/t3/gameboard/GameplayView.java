@@ -2,6 +2,8 @@ package edu.uco.sdd.t3.gameboard;
 
 /* This is Josh's comment! I'm testing this from another branch!
  * I'm going to merge this into the master right after I push this out.
+ * 
+ * This comment is to test synchronization between branches.
  */  
 
 import edu.uco.sdd.t3.R;
