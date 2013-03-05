@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import android.util.Log;
-
+/*
+ * Test comment for new Heru branch working from develop branch
+ */
 public class Board {
 	private Game mCurrentGame;
 	private int mBoardSize;
@@ -12,7 +14,7 @@ public class Board {
 	private MarkerPlacementStrategy mStrategy;
 	private ArrayList<MoveAction> mGameHistory;
 	private Vector<Vector<Integer>> mGameBoard;
-	//test comment for git commit testing
+	
 	public Board(Game g, int boardSize) {
 		mCurrentGame = g;
 		mStrategy = new PlaceMarkerDirectly(this);
