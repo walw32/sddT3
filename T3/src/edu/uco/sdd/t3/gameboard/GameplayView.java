@@ -1,16 +1,14 @@
 package edu.uco.sdd.t3.gameboard;
 
-/* This is Josh's comment! I'm testing this from another branch!
- * I'm going to merge this into the master right after I push this out.
- * 
- * This comment is to test synchronization between branches.
- */  
+// This is Jack's branch
 
 import edu.uco.sdd.t3.R;
 import edu.uco.sdd.t3.R.layout;
 import edu.uco.sdd.t3.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +17,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class GameplayView extends Activity implements OnMarkerPlacedListener, OnGameOverListener {
+public class GameplayView extends Activity implements OnMarkerPlacedListener,
+		OnGameOverListener {
 
 	private Game mCurrentGame;
 	private Player mPlayer1;
@@ -49,111 +48,111 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener, On
 		int col = -1;
 		int buttonId = v.getId();
 		switch (buttonId) {
-			/* ROW 1 *****************************/
-			case R.id.row1col1:
-				row = 0;
-				col = 0;
-				break;
-			case R.id.row1col2:
-				row = 0;
-				col = 1;
-				break;
-			case R.id.row1col3:
-				row = 0;
-				col = 2;
-				break;
-			case R.id.row1col4:
-				row = 0;
-				col = 3;
-				break;
-			case R.id.row1col5:
-				row = 0;
-				col = 4;
-				break;
-			/* ROW 2 *****************************/
-			case R.id.row2col1:
-				row = 1;
-				col = 0;
-				break;
-			case R.id.row2col2:
-				row = 1;
-				col = 1;
-				break;
-			case R.id.row2col3:
-				row = 1;
-				col = 2;
-				break;
-			case R.id.row2col4:
-				row = 1;
-				col = 3;
-				break;
-			case R.id.row2col5:
-				row = 1;
-				col = 4;
-				break;
-			/* ROW 3 *****************************/
-			case R.id.row3col1:
-				row = 2;
-				col = 0;
-				break;
-			case R.id.row3col2:
-				row = 2;
-				col = 1;
-				break;
-			case R.id.row3col3:
-				row = 2;
-				col = 2;
-				break;
-			case R.id.row3col4:
-				row = 2;
-				col = 3;
-				break;
-			case R.id.row3col5:
-				row = 2;
-				col = 4;
-				break;
-			/* ROW 4 *****************************/
-			case R.id.row4col1:
-				row = 3;
-				col = 0;
-				break;
-			case R.id.row4col2:
-				row = 3;
-				col = 1;
-				break;
-			case R.id.row4col3:
-				row = 3;
-				col = 2;
-				break;
-			case R.id.row4col4:
-				row = 3;
-				col = 3;
-				break;
-			case R.id.row4col5:
-				row = 3;
-				col = 4;
-				break;
-			/* ROW 5 *****************************/
-			case R.id.row5col1:
-				row = 4;
-				col = 0;
-				break;
-			case R.id.row5col2:
-				row = 4;
-				col = 1;
-				break;
-			case R.id.row5col3:
-				row = 4;
-				col = 2;
-				break;
-			case R.id.row5col4:
-				row = 4;
-				col = 3;
-				break;
-			case R.id.row5col5:
-				row = 4;
-				col = 4;
-				break;
+		/* ROW 1 **************************** */
+		case R.id.row1col1:
+			row = 0;
+			col = 0;
+			break;
+		case R.id.row1col2:
+			row = 0;
+			col = 1;
+			break;
+		case R.id.row1col3:
+			row = 0;
+			col = 2;
+			break;
+		case R.id.row1col4:
+			row = 0;
+			col = 3;
+			break;
+		case R.id.row1col5:
+			row = 0;
+			col = 4;
+			break;
+		/* ROW 2 **************************** */
+		case R.id.row2col1:
+			row = 1;
+			col = 0;
+			break;
+		case R.id.row2col2:
+			row = 1;
+			col = 1;
+			break;
+		case R.id.row2col3:
+			row = 1;
+			col = 2;
+			break;
+		case R.id.row2col4:
+			row = 1;
+			col = 3;
+			break;
+		case R.id.row2col5:
+			row = 1;
+			col = 4;
+			break;
+		/* ROW 3 **************************** */
+		case R.id.row3col1:
+			row = 2;
+			col = 0;
+			break;
+		case R.id.row3col2:
+			row = 2;
+			col = 1;
+			break;
+		case R.id.row3col3:
+			row = 2;
+			col = 2;
+			break;
+		case R.id.row3col4:
+			row = 2;
+			col = 3;
+			break;
+		case R.id.row3col5:
+			row = 2;
+			col = 4;
+			break;
+		/* ROW 4 **************************** */
+		case R.id.row4col1:
+			row = 3;
+			col = 0;
+			break;
+		case R.id.row4col2:
+			row = 3;
+			col = 1;
+			break;
+		case R.id.row4col3:
+			row = 3;
+			col = 2;
+			break;
+		case R.id.row4col4:
+			row = 3;
+			col = 3;
+			break;
+		case R.id.row4col5:
+			row = 3;
+			col = 4;
+			break;
+		/* ROW 5 **************************** */
+		case R.id.row5col1:
+			row = 4;
+			col = 0;
+			break;
+		case R.id.row5col2:
+			row = 4;
+			col = 1;
+			break;
+		case R.id.row5col3:
+			row = 4;
+			col = 2;
+			break;
+		case R.id.row5col4:
+			row = 4;
+			col = 3;
+			break;
+		case R.id.row5col5:
+			row = 4;
+			col = 4;
+			break;
 		}
 		placeMarker(row, col);
 		return true;
@@ -167,7 +166,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener, On
 			markerToPlace = mPlayer1.getMarker();
 		} else {
 			markerToPlace = mPlayer2.getMarker();
-		} 
+		}
 		Drawable markerImage = markerToPlace.getDrawable();
 		int row = action.getX();
 		int column = action.getY();
@@ -250,24 +249,67 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener, On
 			mPlayer2.placeMarker(row, column);
 		}
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
+		switch (item.getItemId()) {
 		case R.id.new_game:
-			newGame();
+			// List items
+			final CharSequence[] items = { "3x3", "4x4", "5x5" };
+			// Prepare the list dialog box
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			// Set its title
+			builder.setTitle("Pick a game mode");
+			// Set the list items and assign with the click listener
+			builder.setItems(items, new DialogInterface.OnClickListener() {
+				// Click listener
+				public void onClick(DialogInterface dialog, int item) {
+					if (item == 0) {
+						newGame("3x3");
+					}
+					if (item == 1) {
+						newGame("4x4");
+					}
+					if (item == 2) {
+						newGame("5x5");
+					}
+				}
+			});
+			AlertDialog alert = builder.create();
+			// display dialog box
+			alert.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	private void newGame() {
-		setContentView(R.layout.activity_gameplay_view_3x3);
-		int boardSize = 3;
-		mCurrentGame = new Game(this, boardSize);
-		mCurrentGame.setMarkerPlacedListener(this);
-		mCurrentGame.setGameVictoryListener(this);
-		mPlayer1 = mCurrentGame.getPlayer1();
-		mPlayer2 = mCurrentGame.getPlayer2();
+
+	private void newGame(String gamemode) { // added parameter
+		if (gamemode == "3x3") { // change to gamemode 3x3
+			setContentView(R.layout.activity_gameplay_view_3x3);
+			int boardSize = 3;
+			mCurrentGame = new Game(this, boardSize);
+			mCurrentGame.setMarkerPlacedListener(this);
+			mCurrentGame.setGameVictoryListener(this);
+			mPlayer1 = mCurrentGame.getPlayer1();
+			mPlayer2 = mCurrentGame.getPlayer2();
+		}
+		if (gamemode == "4x4") { // change to gamemode 4x4
+			setContentView(R.layout.activity_gameplay_view_4x4);
+			int boardSize = 4;
+			mCurrentGame = new Game(this, boardSize);
+			mCurrentGame.setMarkerPlacedListener(this);
+			mCurrentGame.setGameVictoryListener(this);
+			mPlayer1 = mCurrentGame.getPlayer1();
+			mPlayer2 = mCurrentGame.getPlayer2();
+		}
+		if (gamemode == "5x5") { // change to gamemode 5x5
+			setContentView(R.layout.activity_gameplay_view_5x5);
+			int boardSize = 5;
+			mCurrentGame = new Game(this, boardSize);
+			mCurrentGame.setMarkerPlacedListener(this);
+			mCurrentGame.setGameVictoryListener(this);
+			mPlayer1 = mCurrentGame.getPlayer1();
+			mPlayer2 = mCurrentGame.getPlayer2();
+		}
 	}
 
 	@Override
