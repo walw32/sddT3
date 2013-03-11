@@ -1,10 +1,6 @@
 package edu.uco.sdd.t3.gameboard;
 
 public class PlayerObject implements Player {
-
-	private Game mCurrentGame;
-	private Marker mMarker;
-	private int mPlayerId;
 	
 	public PlayerObject(Game newGame, int playerId) {
 		mCurrentGame = newGame;
@@ -37,4 +33,8 @@ public class PlayerObject implements Player {
 		mPlayerId = id;		
 	}
 
+
+	private Game mCurrentGame;
+	private Marker mMarker;
+	private int mPlayerId;
 }

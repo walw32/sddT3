@@ -12,14 +12,6 @@ public class Game {
 		PLAYER_1_TURN, PLAYER_2_TURN, GAME_OVER
 	}
 
-	private Board mGameBoard;
-	private Player mPlayer1;
-	private Player mPlayer2;
-	private OnMarkerPlacedListener mMarkerListener;
-	private OnGameOverListener mGameEndListener;
-	private Context mContext;
-	private State mGameState;
-
 	public Game(Context appContext, int boardSize) {
 		mContext = appContext;
 		mGameBoard = new Board(this, boardSize);
@@ -31,6 +23,8 @@ public class Game {
 				R.drawable.o_graphic);
 		Marker X = new Marker(xImage, mPlayer1);
 		Marker O = new Marker(oImage, mPlayer2);
+		mPlayer1.setMarker(X);
+		mPlayer2.setMarker(O);
 		mGameState = State.PLAYER_1_TURN;
 	}
 
@@ -41,15 +35,15 @@ public class Game {
 			}
 			// If we can place the marker at that location, do stuff.
 			if (mGameBoard.placeMarker(action)) {
-				if (mMarkerListener != null) {
-					mMarkerListener.onMarkerPlaced(action);
+				if (mGameStateListener != null) {
+					mGameStateListener.onMarkerPlaced(action);
 				}
 				mGameState = State.PLAYER_2_TURN;
 				if (doVictoryEvaluation(action)) {
 					mGameState = State.GAME_OVER;
 					Log.d("Game", "Game over! Player 1 wins!");
-					if (mGameEndListener != null) {
-						mGameEndListener.onGameOver("Game over! Player 1 wins!");
+					if (mGameStateListener != null) {
+						mGameStateListener.onGameOver("Game over! Player 1 wins!");
 					}
 				} else if (mGameBoard.isFilled()) {
 					mGameState = State.GAME_OVER;
@@ -63,15 +57,15 @@ public class Game {
 				return;
 			}
 			if (mGameBoard.placeMarker(action)) {
-				if (mMarkerListener != null) {
-					mMarkerListener.onMarkerPlaced(action);
+				if (mGameStateListener != null) {
+					mGameStateListener.onMarkerPlaced(action);
 				}
 				mGameState = State.PLAYER_1_TURN;
 				if (doVictoryEvaluation(action)) {
 					mGameState = State.GAME_OVER;
 					Log.d("Game", "Game over! Player 2 wins!");
-					if (mGameEndListener != null) {
-						mGameEndListener.onGameOver("Game over! Player 2 wins!");
+					if (mGameStateListener != null) {
+						mGameStateListener.onGameOver("Game over! Player 2 wins!");
 					} 
 				} else if (mGameBoard.isFilled()) {
 					mGameState = State.GAME_OVER;
@@ -93,14 +87,10 @@ public class Game {
 		return mPlayer2;
 	}
 
-	public void setMarkerPlacedListener(OnMarkerPlacedListener l) {
-		mMarkerListener = l;
+	public void setGameStateListener(GameStateListener l) {
+		mGameStateListener = l;
 	}
 	
-	public void setGameVictoryListener(OnGameOverListener l) {
-		mGameEndListener = l;
-	}
-
 	public State getGameState() {
 		return mGameState;
 	}
@@ -205,6 +195,13 @@ public class Game {
 	}
 	
 	public void stalemate() {
-		mGameEndListener.onGameOver("Curses! Stalemate!");
+		mGameStateListener.onGameOver("Curses! Stalemate!");
 	}
+	
+	private Board mGameBoard;
+	private Player mPlayer1;
+	private Player mPlayer2;
+	private GameStateListener mGameStateListener;
+	private Context mContext;
+	private State mGameState;
 }

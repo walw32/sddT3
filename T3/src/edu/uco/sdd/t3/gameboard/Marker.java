@@ -3,8 +3,6 @@ package edu.uco.sdd.t3.gameboard;
 import android.graphics.drawable.Drawable;
 
 public class Marker {
-	private Drawable mDrawable;
-	private Player mPlayer;
 	
 	public Marker() {
 		mDrawable = null;
@@ -19,13 +17,11 @@ public class Marker {
 	public Marker(Marker copyDrawable, Player p) {
 		mDrawable = copyDrawable.mDrawable;
 		mPlayer = p;
-		mPlayer.setMarker(this);
 	}
 	
 	public Marker(Drawable d, Player p) {
 		mDrawable = d;
 		mPlayer = p;
-		mPlayer.setMarker(this);
 	}
 	
 	public Drawable getDrawable() {
@@ -39,4 +35,7 @@ public class Marker {
 	public Player getPlayer() {
 		return mPlayer;
 	}
+	
+	private Drawable mDrawable;
+	private Player mPlayer;
 }

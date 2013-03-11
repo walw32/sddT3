@@ -9,8 +9,6 @@ package edu.uco.sdd.t3.gameboard;
  */  
 
 import edu.uco.sdd.t3.R;
-import edu.uco.sdd.t3.R.layout;
-import edu.uco.sdd.t3.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -21,11 +19,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class GameplayView extends Activity implements OnMarkerPlacedListener, OnGameOverListener {
-
-	private Game mCurrentGame;
-	private Player mPlayer1;
-	private Player mPlayer2;
+public class GameplayView extends Activity implements GameStateListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +27,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener, On
 		setContentView(R.layout.activity_gameplay_view_3x3);
 		int boardSize = 3;
 		mCurrentGame = new Game(this, boardSize);
-		mCurrentGame.setMarkerPlacedListener(this);
-		mCurrentGame.setGameVictoryListener(this);
+		mCurrentGame.setGameStateListener(this);
 		mPlayer1 = mCurrentGame.getPlayer1();
 		mPlayer2 = mCurrentGame.getPlayer2();
 	}
@@ -266,8 +259,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener, On
 		setContentView(R.layout.activity_gameplay_view_3x3);
 		int boardSize = 3;
 		mCurrentGame = new Game(this, boardSize);
-		mCurrentGame.setMarkerPlacedListener(this);
-		mCurrentGame.setGameVictoryListener(this);
+		mCurrentGame.setGameStateListener(this);
 		mPlayer1 = mCurrentGame.getPlayer1();
 		mPlayer2 = mCurrentGame.getPlayer2();
 	}
@@ -278,4 +270,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener, On
 		gameMessage.setText(message);
 	}
 
+	private Game mCurrentGame;
+	private Player mPlayer1;
+	private Player mPlayer2;
 }
