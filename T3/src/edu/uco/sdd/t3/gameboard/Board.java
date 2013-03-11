@@ -6,13 +6,7 @@ import java.util.Vector;
 import android.util.Log;
 
 public class Board {
-	private Game mCurrentGame;
-	private int mBoardSize;
-	private int mTotalMarkersPlaced;
-	private MarkerPlacementStrategy mStrategy;
-	private ArrayList<MoveAction> mGameHistory;
-	private Vector<Vector<Integer>> mGameBoard;
-	//test comment for git commit testing
+
 	public Board(Game g, int boardSize) {
 		mCurrentGame = g;
 		mStrategy = new PlaceMarkerDirectly(this);
@@ -60,5 +54,11 @@ public class Board {
 	public boolean isFilled() {
 		return (mTotalMarkersPlaced >= mBoardSize * mBoardSize);
 	}
-
+	
+	private Game mCurrentGame;
+	private int mBoardSize;
+	private int mTotalMarkersPlaced;
+	private MarkerPlacementStrategy mStrategy;
+	private ArrayList<MoveAction> mGameHistory;
+	private Vector<Vector<Integer>> mGameBoard;
 }

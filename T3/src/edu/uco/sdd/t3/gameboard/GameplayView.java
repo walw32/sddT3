@@ -3,8 +3,6 @@ package edu.uco.sdd.t3.gameboard;
 // This is Jack's comment test
 
 import edu.uco.sdd.t3.R;
-import edu.uco.sdd.t3.R.layout;
-import edu.uco.sdd.t3.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,12 +15,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class GameplayView extends Activity implements OnMarkerPlacedListener,
-		OnGameOverListener {
-
-	private Game mCurrentGame;
-	private Player mPlayer1;
-	private Player mPlayer2;
+public class GameplayView extends Activity implements GameStateListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +23,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener,
 		setContentView(R.layout.activity_gameplay_view_3x3);
 		int boardSize = 3;
 		mCurrentGame = new Game(this, boardSize);
-		mCurrentGame.setMarkerPlacedListener(this);
-		mCurrentGame.setGameVictoryListener(this);
+		mCurrentGame.setGameStateListener(this);
 		mPlayer1 = mCurrentGame.getPlayer1();
 		mPlayer2 = mCurrentGame.getPlayer2();
 	}
@@ -48,111 +40,111 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener,
 		int col = -1;
 		int buttonId = v.getId();
 		switch (buttonId) {
-		/* ROW 1 **************************** */
-		case R.id.row1col1:
-			row = 0;
-			col = 0;
-			break;
-		case R.id.row1col2:
-			row = 0;
-			col = 1;
-			break;
-		case R.id.row1col3:
-			row = 0;
-			col = 2;
-			break;
-		case R.id.row1col4:
-			row = 0;
-			col = 3;
-			break;
-		case R.id.row1col5:
-			row = 0;
-			col = 4;
-			break;
-		/* ROW 2 **************************** */
-		case R.id.row2col1:
-			row = 1;
-			col = 0;
-			break;
-		case R.id.row2col2:
-			row = 1;
-			col = 1;
-			break;
-		case R.id.row2col3:
-			row = 1;
-			col = 2;
-			break;
-		case R.id.row2col4:
-			row = 1;
-			col = 3;
-			break;
-		case R.id.row2col5:
-			row = 1;
-			col = 4;
-			break;
-		/* ROW 3 **************************** */
-		case R.id.row3col1:
-			row = 2;
-			col = 0;
-			break;
-		case R.id.row3col2:
-			row = 2;
-			col = 1;
-			break;
-		case R.id.row3col3:
-			row = 2;
-			col = 2;
-			break;
-		case R.id.row3col4:
-			row = 2;
-			col = 3;
-			break;
-		case R.id.row3col5:
-			row = 2;
-			col = 4;
-			break;
-		/* ROW 4 **************************** */
-		case R.id.row4col1:
-			row = 3;
-			col = 0;
-			break;
-		case R.id.row4col2:
-			row = 3;
-			col = 1;
-			break;
-		case R.id.row4col3:
-			row = 3;
-			col = 2;
-			break;
-		case R.id.row4col4:
-			row = 3;
-			col = 3;
-			break;
-		case R.id.row4col5:
-			row = 3;
-			col = 4;
-			break;
-		/* ROW 5 **************************** */
-		case R.id.row5col1:
-			row = 4;
-			col = 0;
-			break;
-		case R.id.row5col2:
-			row = 4;
-			col = 1;
-			break;
-		case R.id.row5col3:
-			row = 4;
-			col = 2;
-			break;
-		case R.id.row5col4:
-			row = 4;
-			col = 3;
-			break;
-		case R.id.row5col5:
-			row = 4;
-			col = 4;
-			break;
+			/* ROW 1 *****************************/
+			case R.id.row1col1:
+				row = 0;
+				col = 0;
+				break;
+			case R.id.row1col2:
+				row = 0;
+				col = 1;
+				break;
+			case R.id.row1col3:
+				row = 0;
+				col = 2;
+				break;
+			case R.id.row1col4:
+				row = 0;
+				col = 3;
+				break;
+			case R.id.row1col5:
+				row = 0;
+				col = 4;
+				break;
+			/* ROW 2 *****************************/
+			case R.id.row2col1:
+				row = 1;
+				col = 0;
+				break;
+			case R.id.row2col2:
+				row = 1;
+				col = 1;
+				break;
+			case R.id.row2col3:
+				row = 1;
+				col = 2;
+				break;
+			case R.id.row2col4:
+				row = 1;
+				col = 3;
+				break;
+			case R.id.row2col5:
+				row = 1;
+				col = 4;
+				break;
+			/* ROW 3 *****************************/
+			case R.id.row3col1:
+				row = 2;
+				col = 0;
+				break;
+			case R.id.row3col2:
+				row = 2;
+				col = 1;
+				break;
+			case R.id.row3col3:
+				row = 2;
+				col = 2;
+				break;
+			case R.id.row3col4:
+				row = 2;
+				col = 3;
+				break;
+			case R.id.row3col5:
+				row = 2;
+				col = 4;
+				break;
+			/* ROW 4 *****************************/
+			case R.id.row4col1:
+				row = 3;
+				col = 0;
+				break;
+			case R.id.row4col2:
+				row = 3;
+				col = 1;
+				break;
+			case R.id.row4col3:
+				row = 3;
+				col = 2;
+				break;
+			case R.id.row4col4:
+				row = 3;
+				col = 3;
+				break;
+			case R.id.row4col5:
+				row = 3;
+				col = 4;
+				break;
+			/* ROW 5 *****************************/
+			case R.id.row5col1:
+				row = 4;
+				col = 0;
+				break;
+			case R.id.row5col2:
+				row = 4;
+				col = 1;
+				break;
+			case R.id.row5col3:
+				row = 4;
+				col = 2;
+				break;
+			case R.id.row5col4:
+				row = 4;
+				col = 3;
+				break;
+			case R.id.row5col5:
+				row = 4;
+				col = 4;
+				break;
 		}
 		placeMarker(row, col);
 		return true;
@@ -166,7 +158,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener,
 			markerToPlace = mPlayer1.getMarker();
 		} else {
 			markerToPlace = mPlayer2.getMarker();
-		}
+		} 
 		Drawable markerImage = markerToPlace.getDrawable();
 		int row = action.getX();
 		int column = action.getY();
@@ -287,8 +279,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener,
 			setContentView(R.layout.activity_gameplay_view_3x3);
 			int boardSize = 3;
 			mCurrentGame = new Game(this, boardSize);
-			mCurrentGame.setMarkerPlacedListener(this);
-			mCurrentGame.setGameVictoryListener(this);
+			mCurrentGame.setGameStateListener(this);
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
 		}
@@ -296,8 +287,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener,
 			setContentView(R.layout.activity_gameplay_view_4x4);
 			int boardSize = 4;
 			mCurrentGame = new Game(this, boardSize);
-			mCurrentGame.setMarkerPlacedListener(this);
-			mCurrentGame.setGameVictoryListener(this);
+			mCurrentGame.setGameStateListener(this);
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
 		}
@@ -305,11 +295,20 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener,
 			setContentView(R.layout.activity_gameplay_view_5x5);
 			int boardSize = 5;
 			mCurrentGame = new Game(this, boardSize);
-			mCurrentGame.setMarkerPlacedListener(this);
-			mCurrentGame.setGameVictoryListener(this);
+			mCurrentGame.setGameStateListener(this);
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
 		}
+	}
+	
+	private void newGame() {
+		setContentView(R.layout.activity_gameplay_view_3x3);
+		int boardSize = 3;
+		mCurrentGame = new Game(this, boardSize);
+		mCurrentGame.setGameStateListener(this);
+		mPlayer1 = mCurrentGame.getPlayer1();
+
+		mPlayer2 = mCurrentGame.getPlayer2();
 	}
 
 	@Override
@@ -318,4 +317,7 @@ public class GameplayView extends Activity implements OnMarkerPlacedListener,
 		gameMessage.setText(message);
 	}
 
+	private Game mCurrentGame;
+	private Player mPlayer1;
+	private Player mPlayer2;
 }
