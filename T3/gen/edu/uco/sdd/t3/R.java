@@ -27,7 +27,17 @@ public final class R {
         public static final int x_graphic=0x7f020003;
     }
     public static final class id {
-        public static final int new_game=0x7f08001a;
+        public static final int aiVsAiButton=0x7f080027;
+        public static final int boardSizes=0x7f08001d;
+        public static final int five=0x7f080020;
+        public static final int four=0x7f08001f;
+        public static final int hostGameButton=0x7f080025;
+        public static final int hostIp=0x7f080028;
+        public static final int joinGameButton=0x7f080029;
+        public static final int manVsManButton=0x7f080026;
+        public static final int multiPlayerButton=0x7f08001c;
+        public static final int new_game=0x7f08002d;
+        public static final int playGame=0x7f08002c;
         public static final int row1col1=0x7f080000;
         public static final int row1col2=0x7f080001;
         public static final int row1col3=0x7f080002;
@@ -53,12 +63,24 @@ public final class R {
         public static final int row5col3=0x7f080017;
         public static final int row5col4=0x7f080018;
         public static final int row5col5=0x7f080019;
+        public static final int singlePlayerButton=0x7f08001a;
+        public static final int ten=0x7f080022;
+        public static final int textView1=0x7f08001b;
+        public static final int textView2=0x7f08002a;
+        public static final int textView3=0x7f08002b;
+        public static final int thirty=0x7f080024;
+        public static final int three=0x7f08001e;
+        public static final int timeoutThresholds=0x7f080021;
+        public static final int twenty=0x7f080023;
         public static final int victoryText=0x7f080009;
     }
     public static final class layout {
         public static final int activity_gameplay_view_3x3=0x7f030000;
         public static final int activity_gameplay_view_4x4=0x7f030001;
         public static final int activity_gameplay_view_5x5=0x7f030002;
+        public static final int main_menu=0x7f030003;
+        public static final int multiplayer_game_configuration=0x7f030004;
+        public static final int single_player_game_configuration=0x7f030005;
     }
     public static final class menu {
         public static final int gameplay_view=0x7f070000;

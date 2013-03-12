@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:android1="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent" android:layout_height="match_parent">
+
+	<RadioGroup android1:id="@+id/boardSizes"
+		android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+		android1:layout_alignParentLeft="true" android1:layout_marginLeft="23dp"
+		android1:layout_marginTop="30dp">
+
+		<RadioButton android1:id="@+id/three"
+			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+			android1:checked="true" android1:text="3x3" />
+
+		<RadioButton android1:id="@+id/four"
+			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+			android1:text="4x4" />
+
+		<RadioButton android1:id="@+id/five"
+			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+			android1:text="5x5" />
+	</RadioGroup>
+
+	<RadioGroup android1:id="@+id/timeoutThresholds"
+		android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+		android1:layout_alignParentRight="true" android1:layout_alignTop="@+id/boardSizes"
+		android1:layout_marginRight="20dp">
+
+		<RadioButton android1:id="@+id/ten" android1:layout_width="wrap_content"
+			android1:layout_height="wrap_content" android1:checked="true"
+			android1:text="10 sec." />
+
+		<RadioButton android1:id="@+id/twenty"
+			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+			android1:text="20 sec." />
+
+		<RadioButton android1:id="@+id/thirty"
+			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+			android1:text="30 sec." />
+	</RadioGroup>
+
+	<TextView android1:id="@+id/textView1" android1:layout_width="wrap_content"
+		android1:layout_height="wrap_content" android1:layout_alignParentTop="true"
+		android1:layout_centerHorizontal="true" android1:text="Game Configuration"
+		android1:textAppearance="?android:attr/textAppearanceLarge" />
+
+	<Button android1:id="@+id/hostGameButton" android1:layout_width="wrap_content"
+		android1:layout_height="wrap_content" android1:layout_below="@+id/timeoutThresholds"
+		android1:layout_centerHorizontal="true" android1:layout_marginTop="84dp"
+		android1:text="Host &amp; Play!" />
+
+	<RadioButton android1:id="@+id/manVsManButton"
+		android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+		android1:layout_alignLeft="@+id/boardSizes" android1:layout_below="@+id/boardSizes"
+		android1:layout_marginTop="26dp" android1:text="Man vs. Man" />
+
+	<RadioButton android1:id="@+id/aiVsAiButton"
+		android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+		android1:layout_alignBaseline="@+id/manVsManButton"
+		android1:layout_alignBottom="@+id/manVsManButton"
+		android1:layout_alignRight="@+id/timeoutThresholds" android1:text="AI vs. AI" />
+
+	<EditText android1:id="@+id/hostIp" android1:layout_width="wrap_content"
+		android1:layout_height="wrap_content"
+		android1:layout_alignParentBottom="true"
+		android1:layout_alignParentLeft="true" android1:layout_alignRight="@+id/manVsManButton"
+		android1:layout_alignTop="@+id/joinGameButton" android1:ems="10" />
+
+	<Button android1:id="@+id/joinGameButton" android1:layout_width="wrap_content"
+		android1:layout_height="wrap_content"
+		android1:layout_alignParentBottom="true"
+		android1:layout_alignParentRight="true" android1:layout_toRightOf="@+id/hostIp"
+		android1:text="Join Game!" />
+
+	<TextView
+	    android1:id="@+id/textView2"
+	    android1:layout_width="wrap_content"
+	    android1:layout_height="wrap_content"
+	    android1:layout_above="@+id/hostIp"
+	    android1:layout_alignParentLeft="true"
+	    android1:text="Enter Host IP Here"
+	    android1:textAppearance="?android:attr/textAppearanceSmall" />
+
+	<TextView
+	    android1:id="@+id/textView3"
+	    android1:layout_width="wrap_content"
+	    android1:layout_height="wrap_content"
+	    android1:layout_above="@+id/textView2"
+	    android1:layout_alignParentLeft="true"
+	    android1:text="Join Game"
+	    android1:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>
