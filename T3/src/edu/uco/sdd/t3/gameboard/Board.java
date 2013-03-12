@@ -8,13 +8,7 @@ import android.util.Log;
  * Test comment for new Heru branch working from develop branch
  */
 public class Board {
-	private Game mCurrentGame;
-	private int mBoardSize;
-	private int mTotalMarkersPlaced;
-	private MarkerPlacementStrategy mStrategy;
-	private ArrayList<MoveAction> mGameHistory;
-	private Vector<Vector<Integer>> mGameBoard;
-	
+
 	public Board(Game g, int boardSize) {
 		mCurrentGame = g;
 		mStrategy = new PlaceMarkerDirectly(this);
@@ -62,5 +56,11 @@ public class Board {
 	public boolean isFilled() {
 		return (mTotalMarkersPlaced >= mBoardSize * mBoardSize);
 	}
-
+	
+	private Game mCurrentGame;
+	private int mBoardSize;
+	private int mTotalMarkersPlaced;
+	private MarkerPlacementStrategy mStrategy;
+	private ArrayList<MoveAction> mGameHistory;
+	private Vector<Vector<Integer>> mGameBoard;
 }
