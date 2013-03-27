@@ -29,7 +29,11 @@ import android.widget.ImageView;
 
 public class Cloud extends Activity {
 	private String gameHistory;
-
+	private String cloudHttp;
+	private String gameID;
+	HttpPost cloudHttppost;
+	HttpResponse response;
+	HttpClient httpclient;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,19 +45,19 @@ public class Cloud extends Activity {
         Log.d("Game history:",""+gameHistory);
 		// this search uses coordinates (nearby search, no multiplier)
 		
-			//try {
-			//	city = URLEncoder.encode(user.getMyCity(),
-			//			"utf-8");
-			//} catch (UnsupportedEncodingException e) {
+			try {
+				gameID = URLEncoder.encode("blah",
+						"utf-8");
+			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
-			//	e.printStackTrace();
-		//	}
-		//	myHttp = "http://mywebsite.com/xml.php?verification=&city="
-			//		+ city + "&locale=" + locale;
-			// myHttppost = new HttpPost(myHttp);
+				e.printStackTrace();
+			}
+			cloudHttp = "http://herura.com/cloud.php?code=toongo&name="
+					+ gameID + "&moves=" + gameHistory + "&action=save";
+			 cloudHttppost = new HttpPost(cloudHttp);
 		
 
-//		new Places().execute();
+		new CloudHelper().execute();
 
 	}
 
@@ -64,15 +68,16 @@ public class Cloud extends Activity {
 	}
 
 	// handles http request in a background thread (have to do it this way)
-	/*class Places extends AsyncTask {
+	class CloudHelper extends AsyncTask {
 
 		@Override
 		protected Object doInBackground(Object... arg0) {
 
 			try {
-				response = httpclient.execute(myHttppost);
-				// store the xml in user class
-				EntityUtils.toString(response.getEntity());
+				// store the game moves in database
+				response = httpclient.execute(cloudHttppost);
+				// retrieve the game moves from database
+				//EntityUtils.toString(response.getEntity());
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -81,16 +86,16 @@ public class Cloud extends Activity {
 				e.printStackTrace();
 			}
 
-			
+			/*
 			Intent intent = new Intent(Cloud.this, Intermediate2.class);
 
 			intent.putExtra("user", user);
 			startActivity(intent);
 			finish();
-
-			return null;
+*/
+			return null; 
 		}
 
-	}*/
+	}
 
 }
