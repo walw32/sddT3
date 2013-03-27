@@ -4,14 +4,6 @@
     android:layout_height="match_parent" 
     >
 
-    <Button
-        android:id="@+id/singlePlayerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Single Player" />
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -19,16 +11,25 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="56dp"
-        android:text="Main Menu"
+        android:text="Interacting with Cloud."
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/multiPlayerButton"
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/singlePlayerButton"
+        android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
-        android:text="Multiplayer" />
+        android:layout_marginTop="22dp"
+        android:text="Please Wait."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
     
 </RelativeLayout>

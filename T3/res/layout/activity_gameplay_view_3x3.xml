@@ -110,4 +110,11 @@
             android:text="@string/gameOutcome" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/cloudSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onButtonClicked"
+        android:text="Save Game to Cloud" />
+
 </LinearLayout>

@@ -2,16 +2,23 @@ package edu.uco.sdd.t3.gameboard;
 
 // This is Jack's comment test
 
+
+import java.util.ArrayList;
+
+
+
 import edu.uco.sdd.t3.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -26,6 +33,8 @@ public class GameplayView extends Activity implements GameStateListener {
 		mCurrentGame.setGameStateListener(this);
 		mPlayer1 = mCurrentGame.getPlayer1();
 		mPlayer2 = mCurrentGame.getPlayer2();
+		View cloudButton = findViewById(R.id.cloudSave);
+	    cloudButton.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -40,112 +49,134 @@ public class GameplayView extends Activity implements GameStateListener {
 		int col = -1;
 		int buttonId = v.getId();
 		switch (buttonId) {
-			/* ROW 1 *****************************/
-			case R.id.row1col1:
-				row = 0;
-				col = 0;
-				break;
-			case R.id.row1col2:
-				row = 0;
-				col = 1;
-				break;
-			case R.id.row1col3:
-				row = 0;
-				col = 2;
-				break;
-			case R.id.row1col4:
-				row = 0;
-				col = 3;
-				break;
-			case R.id.row1col5:
-				row = 0;
-				col = 4;
-				break;
-			/* ROW 2 *****************************/
-			case R.id.row2col1:
-				row = 1;
-				col = 0;
-				break;
-			case R.id.row2col2:
-				row = 1;
-				col = 1;
-				break;
-			case R.id.row2col3:
-				row = 1;
-				col = 2;
-				break;
-			case R.id.row2col4:
-				row = 1;
-				col = 3;
-				break;
-			case R.id.row2col5:
-				row = 1;
-				col = 4;
-				break;
-			/* ROW 3 *****************************/
-			case R.id.row3col1:
-				row = 2;
-				col = 0;
-				break;
-			case R.id.row3col2:
-				row = 2;
-				col = 1;
-				break;
-			case R.id.row3col3:
-				row = 2;
-				col = 2;
-				break;
-			case R.id.row3col4:
-				row = 2;
-				col = 3;
-				break;
-			case R.id.row3col5:
-				row = 2;
-				col = 4;
-				break;
-			/* ROW 4 *****************************/
-			case R.id.row4col1:
-				row = 3;
-				col = 0;
-				break;
-			case R.id.row4col2:
-				row = 3;
-				col = 1;
-				break;
-			case R.id.row4col3:
-				row = 3;
-				col = 2;
-				break;
-			case R.id.row4col4:
-				row = 3;
-				col = 3;
-				break;
-			case R.id.row4col5:
-				row = 3;
-				col = 4;
-				break;
-			/* ROW 5 *****************************/
-			case R.id.row5col1:
-				row = 4;
-				col = 0;
-				break;
-			case R.id.row5col2:
-				row = 4;
-				col = 1;
-				break;
-			case R.id.row5col3:
-				row = 4;
-				col = 2;
-				break;
-			case R.id.row5col4:
-				row = 4;
-				col = 3;
-				break;
-			case R.id.row5col5:
-				row = 4;
-				col = 4;
-				break;
+		/* ROW 1 **************************** */
+		case R.id.row1col1:
+			row = 0;
+			col = 0;
+			break;
+		case R.id.row1col2:
+			row = 0;
+			col = 1;
+			break;
+		case R.id.row1col3:
+			row = 0;
+			col = 2;
+			break;
+		case R.id.row1col4:
+			row = 0;
+			col = 3;
+			break;
+		case R.id.row1col5:
+			row = 0;
+			col = 4;
+			break;
+		/* ROW 2 **************************** */
+		case R.id.row2col1:
+			row = 1;
+			col = 0;
+			break;
+		case R.id.row2col2:
+			row = 1;
+			col = 1;
+			break;
+		case R.id.row2col3:
+			row = 1;
+			col = 2;
+			break;
+		case R.id.row2col4:
+			row = 1;
+			col = 3;
+			break;
+		case R.id.row2col5:
+			row = 1;
+			col = 4;
+			break;
+		/* ROW 3 **************************** */
+		case R.id.row3col1:
+			row = 2;
+			col = 0;
+			break;
+		case R.id.row3col2:
+			row = 2;
+			col = 1;
+			break;
+		case R.id.row3col3:
+			row = 2;
+			col = 2;
+			break;
+		case R.id.row3col4:
+			row = 2;
+			col = 3;
+			break;
+		case R.id.row3col5:
+			row = 2;
+			col = 4;
+			break;
+		/* ROW 4 **************************** */
+		case R.id.row4col1:
+			row = 3;
+			col = 0;
+			break;
+		case R.id.row4col2:
+			row = 3;
+			col = 1;
+			break;
+		case R.id.row4col3:
+			row = 3;
+			col = 2;
+			break;
+		case R.id.row4col4:
+			row = 3;
+			col = 3;
+			break;
+		case R.id.row4col5:
+			row = 3;
+			col = 4;
+			break;
+		/* ROW 5 **************************** */
+		case R.id.row5col1:
+			row = 4;
+			col = 0;
+			break;
+		case R.id.row5col2:
+			row = 4;
+			col = 1;
+			break;
+		case R.id.row5col3:
+			row = 4;
+			col = 2;
+			break;
+		case R.id.row5col4:
+			row = 4;
+			col = 3;
+			break;
+		case R.id.row5col5:
+			row = 4;
+			col = 4;
+			break;
+		//Cloud Save
+		case R.id.cloudSave:
+			// Code for the cloud replay saving system
+			Board board = mCurrentGame.getmGameBoard();
+			ArrayList<MoveAction> history = board.getmGameHistory();
+			MoveAction actions;
+			String gameHistory = "";
+			for (int i = 0; i < history.size(); i++) {
+				actions = history.get(i);
+
+				// do it in 3 lines because adding the ints on 1 line just
+				// make a big int number.. this way preserves each value as
+				// a string concatenation
+				gameHistory += actions.getPlayerId();
+				gameHistory += actions.getX();
+				gameHistory += actions.getY();
+			}
+			Intent intent = new Intent(GameplayView.this, Cloud.class);			
+			intent.putExtra("history", gameHistory);
+			startActivity(intent);
+			break;
 		}
+		
 		placeMarker(row, col);
 		return true;
 	}
@@ -158,7 +189,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			markerToPlace = mPlayer1.getMarker();
 		} else {
 			markerToPlace = mPlayer2.getMarker();
-		} 
+		}
 		Drawable markerImage = markerToPlace.getDrawable();
 		int row = action.getX();
 		int column = action.getY();
@@ -300,7 +331,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			mPlayer2 = mCurrentGame.getPlayer2();
 		}
 	}
-	
+
 	private void newGame() {
 		setContentView(R.layout.activity_gameplay_view_3x3);
 		int boardSize = 3;
@@ -315,6 +346,11 @@ public class GameplayView extends Activity implements GameStateListener {
 	public void onGameOver(String message) {
 		TextView gameMessage = (TextView) findViewById(R.id.victoryText);
 		gameMessage.setText(message);
+		
+		//set button for cloud save visible
+		View cloudButton = findViewById(R.id.cloudSave);
+	    cloudButton.setVisibility(View.VISIBLE);
+
 	}
 
 	private Game mCurrentGame;

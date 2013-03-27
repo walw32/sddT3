@@ -1,5 +1,6 @@
 package edu.uco.sdd.t3.gameboard;
 
+
 import java.util.Vector;
 
 import android.content.Context;
@@ -8,13 +9,14 @@ import android.util.Log;
 import edu.uco.sdd.t3.R;
 
 public class Game {
+
 	public enum State {
 		PLAYER_1_TURN, PLAYER_2_TURN, GAME_OVER
 	}
 
 	public Game(Context appContext, int boardSize) {
 		mContext = appContext;
-		mGameBoard = new Board(this, boardSize);
+		setmGameBoard(new Board(this, boardSize));
 		mPlayer1 = new PlayerObject(this, 1);
 		mPlayer2 = new PlayerObject(this, 2);
 		Drawable xImage = mContext.getResources().getDrawable(
@@ -34,7 +36,7 @@ public class Game {
 				return;
 			}
 			// If we can place the marker at that location, do stuff.
-			if (mGameBoard.placeMarker(action)) {
+			if (getmGameBoard().placeMarker(action)) {
 				if (mGameStateListener != null) {
 					mGameStateListener.onMarkerPlaced(action);
 				}
@@ -45,7 +47,7 @@ public class Game {
 					if (mGameStateListener != null) {
 						mGameStateListener.onGameOver("Game over! Player 1 wins!");
 					}
-				} else if (mGameBoard.isFilled()) {
+				} else if (getmGameBoard().isFilled()) {
 					mGameState = State.GAME_OVER;
 					stalemate();
 				}
@@ -56,7 +58,7 @@ public class Game {
 			if (action.getPlayerId() != mPlayer2.getId()) {
 				return;
 			}
-			if (mGameBoard.placeMarker(action)) {
+			if (getmGameBoard().placeMarker(action)) {
 				if (mGameStateListener != null) {
 					mGameStateListener.onMarkerPlaced(action);
 				}
@@ -67,7 +69,7 @@ public class Game {
 					if (mGameStateListener != null) {
 						mGameStateListener.onGameOver("Game over! Player 2 wins!");
 					} 
-				} else if (mGameBoard.isFilled()) {
+				} else if (getmGameBoard().isFilled()) {
 					mGameState = State.GAME_OVER;
 					stalemate();
 				}
@@ -96,8 +98,8 @@ public class Game {
 	}
 
 	private boolean doVictoryEvaluation(MoveAction action) {
-		Vector<Vector<Integer>> gameBoardData = mGameBoard.getGameBoard();
-		int gameBoardSize = mGameBoard.getBoardSize();
+		Vector<Vector<Integer>> gameBoardData = getmGameBoard().getGameBoard();
+		int gameBoardSize = getmGameBoard().getBoardSize();
 		Log.d("VictoryCheck", "gameBoardSize = " + gameBoardSize);
 		int markersNeededToWin = gameBoardSize;
 		int playerKey = action.getPlayerId();
@@ -198,6 +200,14 @@ public class Game {
 		mGameStateListener.onGameOver("Curses! Stalemate!");
 	}
 	
+	public Board getmGameBoard() {
+		return mGameBoard;
+	}
+
+	public void setmGameBoard(Board mGameBoard) {
+		this.mGameBoard = mGameBoard;
+	}
+
 	private Board mGameBoard;
 	private Player mPlayer1;
 	private Player mPlayer2;

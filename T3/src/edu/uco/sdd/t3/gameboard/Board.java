@@ -1,5 +1,6 @@
 package edu.uco.sdd.t3.gameboard;
 
+
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -7,12 +8,13 @@ import android.util.Log;
 
 public class Board {
 
+
 	public Board(Game g, int boardSize) {
 		mCurrentGame = g;
 		mStrategy = new PlaceMarkerDirectly(this);
 		mTotalMarkersPlaced = 0;
 		mBoardSize = boardSize;
-		mGameHistory = new ArrayList<MoveAction>();
+		setmGameHistory(new ArrayList<MoveAction>());
 		mGameBoard = new Vector<Vector<Integer>>();
 		mGameBoard.setSize(mBoardSize);
 		for (int i = 0; i < mBoardSize; i++) {
@@ -27,7 +29,7 @@ public class Board {
 	
 	public boolean placeMarker(MoveAction coord) {
 		if (mStrategy.placeMarker(coord)) {
-			mGameHistory.add(coord);
+			getmGameHistory().add(coord);
 			mTotalMarkersPlaced++;
 			return true;
 		} else {
@@ -55,6 +57,14 @@ public class Board {
 		return (mTotalMarkersPlaced >= mBoardSize * mBoardSize);
 	}
 	
+	public ArrayList<MoveAction> getmGameHistory() {
+		return mGameHistory;
+	}
+
+	public void setmGameHistory(ArrayList<MoveAction> mGameHistory) {
+		this.mGameHistory = mGameHistory;
+	}
+
 	private Game mCurrentGame;
 	private int mBoardSize;
 	private int mTotalMarkersPlaced;
