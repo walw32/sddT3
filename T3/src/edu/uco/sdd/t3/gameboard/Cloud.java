@@ -33,7 +33,7 @@ public class Cloud extends Activity {
 	private String gameID;
 	HttpPost cloudHttppost;
 	HttpResponse response;
-	HttpClient httpclient;
+	HttpClient httpclient = new DefaultHttpClient();
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,7 +46,7 @@ public class Cloud extends Activity {
 		// this search uses coordinates (nearby search, no multiplier)
 		
 			try {
-				gameID = URLEncoder.encode("blah",
+				gameID = URLEncoder.encode("androidtest",
 						"utf-8");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
