@@ -313,6 +313,8 @@ public class GameplayView extends Activity implements GameStateListener {
 			mCurrentGame.setGameStateListener(this);
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
+			View cloudButton = findViewById(R.id.cloudSave);
+		    cloudButton.setVisibility(View.GONE);
 		}
 		if (gamemode == "4x4") { // change to gamemode 4x4
 			setContentView(R.layout.activity_gameplay_view_4x4);
@@ -321,6 +323,8 @@ public class GameplayView extends Activity implements GameStateListener {
 			mCurrentGame.setGameStateListener(this);
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
+			View cloudButton = findViewById(R.id.cloudSave);
+		    cloudButton.setVisibility(View.GONE);
 		}
 		if (gamemode == "5x5") { // change to gamemode 5x5
 			setContentView(R.layout.activity_gameplay_view_5x5);
@@ -329,6 +333,8 @@ public class GameplayView extends Activity implements GameStateListener {
 			mCurrentGame.setGameStateListener(this);
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
+			View cloudButton = findViewById(R.id.cloudSave);
+		    cloudButton.setVisibility(View.GONE);
 		}
 	}
 
