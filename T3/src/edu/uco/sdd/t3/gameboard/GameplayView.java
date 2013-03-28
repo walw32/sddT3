@@ -20,7 +20,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class GameplayView extends Activity implements GameStateListener {
-
+	private String gameHistory;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,8 +32,15 @@ public class GameplayView extends Activity implements GameStateListener {
 		mPlayer2 = mCurrentGame.getPlayer2();
 		View cloudButton = findViewById(R.id.cloudSave);
 		cloudButton.setVisibility(View.GONE);
+		if (getIntent().getExtras() != null) {
+			Bundle bundle = getIntent().getExtras();
+			gameHistory = (String) bundle.getSerializable("history");
+		}
+		cloudReplay();
 	}
-
+	public void cloudReplay() {
+		Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + gameHistory);
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
