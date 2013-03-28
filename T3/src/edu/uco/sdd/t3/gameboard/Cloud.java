@@ -53,6 +53,7 @@ public class Cloud extends Activity implements OnItemClickListener {
 	private ArrayList<String> moveList = new ArrayList<String>();
 	private ListView lv;
 	private Context myContext = this;
+	private AlertDialog alert;
 	HttpPost cloudHttppost;
 	HttpResponse response;
 	HttpClient httpclient = new DefaultHttpClient();
@@ -173,14 +174,12 @@ public class Cloud extends Activity implements OnItemClickListener {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				Log.d("ACTION:", "" + moveList.get(0));
-				Log.d("ACTION:", "" + moveList.get(1));
-				Log.d("ACTION:", "" + moveList.get(2));
-				Log.d("ACTION:", "" + moveList.get(3));
+
 				// List items
 
 				AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
 				builder.setTitle("Select a game to replay:");
+
 				final ArrayAdapter<String> names = new ArrayAdapter<String>(
 						myContext,
 						android.R.layout.simple_list_item_single_choice,
@@ -189,11 +188,16 @@ public class Cloud extends Activity implements OnItemClickListener {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int item) {
 								Log.d("NAME:", "" + nameList.get(item));
-
+								Intent intent = new Intent(Cloud.this,
+										GameplayView.class);
+								intent.putExtra("history", moveList.get(item));
+								startActivity(intent);
+								stopDialog();
+								finish();
 							}
 
 						});
-				AlertDialog alert = builder.create();
+				alert = builder.create();
 				alert.show();
 			}
 		}
@@ -231,5 +235,9 @@ public class Cloud extends Activity implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void stopDialog() {
+		alert.dismiss();
 	}
 }
