@@ -16,16 +16,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class GameplayView extends Activity implements GameStateListener {
-	private String gameHistory;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,54 +43,6 @@ public class GameplayView extends Activity implements GameStateListener {
 			Bundle bundle = getIntent().getExtras();
 			gameHistory = (String) bundle.getSerializable("history");
 			cloudReplay();
-		}
-
-	}
-
-	public void cloudReplay() {
-		Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + gameHistory);
-		new CloudThread().execute("Replay");
-
-	}
-
-	class CloudThread extends AsyncTask<String, String, String> {
-
-		@Override
-		protected String doInBackground(String... arg0) {
-			// SLEEP 2 SECONDS HERE ...
-			for (int i = 0; i < gameHistory.length() - 2; i += 3) {
-				String temp = gameHistory.substring(i, i + 3);
-				final int row = Integer.parseInt(temp.substring(1, 2));
-				final int column = Integer.parseInt(temp.substring(2));
-				runOnUiThread(new Runnable() {
-					public void run() {
-
-						// stuff that updates ui
-
-						placeMarker(row, column);
-					}
-				});
-
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp);
-				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " +
-				// temp.substring(1,2));
-				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " +
-				// temp.substring(2));
-
-			}
-			return null;
-		}
-
-		@Override
-		protected void onProgressUpdate(String... arg0) {
-			// TODO Auto-generated method stub
-
 		}
 
 	}
@@ -394,6 +347,7 @@ public class GameplayView extends Activity implements GameStateListener {
 		gameMessage.setText(message);
 
 		// set button for cloud save visible
+
 		View cloudButton = findViewById(R.id.cloudSave);
 		cloudButton.setVisibility(View.VISIBLE);
 
@@ -404,7 +358,7 @@ public class GameplayView extends Activity implements GameStateListener {
 		Board board = mCurrentGame.getmGameBoard();
 		ArrayList<MoveAction> history = board.getmGameHistory();
 		MoveAction actions;
-		String gameHistory = "";
+		gameHistory = "";
 		for (int i = 0; i < history.size(); i++) {
 			actions = history.get(i);
 
@@ -415,13 +369,82 @@ public class GameplayView extends Activity implements GameStateListener {
 			gameHistory += actions.getX();
 			gameHistory += actions.getY();
 		}
-		Intent intent = new Intent(GameplayView.this, Cloud.class);
-		intent.putExtra("action", "save");
-		intent.putExtra("history", gameHistory);
-		startActivity(intent);
-		finish();
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		alert.setTitle("Save Name");
+		alert.setMessage("Enter a distinctive name, no spaces allowed.");
+
+		// Set an EditText view to get user input
+		final EditText input = new EditText(this);
+		alert.setView(input);
+
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				Editable value = input.getText();
+				// Do something with value!
+				saveName = value.toString();
+
+				Intent intent = new Intent(GameplayView.this, Cloud.class);
+				intent.putExtra("action", "save");
+				intent.putExtra("saveName", saveName);
+				intent.putExtra("history", gameHistory);
+				startActivity(intent);
+				finish();
+			}
+		});
+		alert.show();
 	}
 
+	public void cloudReplay() {
+		Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + gameHistory);
+		new CloudThread().execute("Replay");
+
+	}
+
+	class CloudThread extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// SLEEP 2 SECONDS HERE ...
+			for (int i = 0; i < gameHistory.length() - 2; i += 3) {
+				String temp = gameHistory.substring(i, i + 3);
+				final int row = Integer.parseInt(temp.substring(1, 2));
+				final int column = Integer.parseInt(temp.substring(2));
+				runOnUiThread(new Runnable() {
+					public void run() {
+
+						// stuff that updates ui
+
+						placeMarker(row, column);
+					}
+				});
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp);
+				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " +
+				// temp.substring(1,2));
+				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " +
+				// temp.substring(2));
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(String... arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	private String gameHistory;
+	private String saveName;
 	private Game mCurrentGame;
 	private Player mPlayer1;
 	private Player mPlayer2;

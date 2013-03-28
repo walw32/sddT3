@@ -42,9 +42,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-
+//only works for 3x3 so far.
 public class Cloud extends Activity implements OnItemClickListener {
 	private String gameHistory;
+	private String saveName;
 	private String cloudHttp;
 	private String gameID;
 	private String action;
@@ -57,7 +58,7 @@ public class Cloud extends Activity implements OnItemClickListener {
 	HttpPost cloudHttppost;
 	HttpResponse response;
 	HttpClient httpclient = new DefaultHttpClient();
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,8 +70,9 @@ public class Cloud extends Activity implements OnItemClickListener {
 		Log.d("ACTION:", "" + action);
 		if (action.equals("save")) {
 			gameHistory = (String) bundle.getSerializable("history");
+			saveName = (String) bundle.getSerializable("saveName");
 			try {
-				gameID = URLEncoder.encode("androidtest", "utf-8");
+				gameID = URLEncoder.encode(saveName, "utf-8");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
