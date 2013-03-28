@@ -42,7 +42,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class Cloud extends ListActivity implements OnItemClickListener {
+public class Cloud extends Activity implements OnItemClickListener {
 	private String gameHistory;
 	private String cloudHttp;
 	private String gameID;
@@ -171,23 +171,11 @@ public class Cloud extends ListActivity implements OnItemClickListener {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				lv = getListView();
-				// set a listview populated with the locations that were
-				// retrieved
-				((ListActivity) getBaseContext()).setListAdapter(new ArrayAdapter<String>(getBaseContext(),
-						android.R.layout.simple_list_item_1, nameList));
+				Log.d("ACTION:", "" + moveList.get(0));
+				Log.d("ACTION:", "" + moveList.get(1));
+				Log.d("ACTION:", "" + moveList.get(2));
+				Log.d("ACTION:", "" + moveList.get(3));
 
-				// listen for selections on individual location
-				lv.setOnItemClickListener(new OnItemClickListener() {
-					public void onItemClick(AdapterView<?> adView, View target,
-							int position, long id) {
-
-						// enter the reference for the individual location
-						String move = moveList.get(position);
-						Log.d("REPLAY:", "" + move);
-
-					}
-				});
 			}
 		}
 
@@ -203,7 +191,21 @@ public class Cloud extends ListActivity implements OnItemClickListener {
 		return "?";
 
 	}
+	public boolean onCloudButtonClicked(View v) {
 
+		int buttonId = v.getId();
+		switch (buttonId) {
+		/* ROW 1 **************************** */
+		case R.id.cloudButton:
+			Intent intent = new Intent(Cloud.this, Cloud.class);
+			intent.putExtra("action", "replay");
+			startActivity(intent);
+			finish();
+		break;
+		}
+		
+		return true;
+	}
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
