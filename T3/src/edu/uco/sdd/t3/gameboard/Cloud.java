@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class Cloud extends Activity implements OnItemClickListener {
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private ArrayList<String> moveList = new ArrayList<String>();
 	private ListView lv;
+	private Context myContext = this;
 	HttpPost cloudHttppost;
 	HttpResponse response;
 	HttpClient httpclient = new DefaultHttpClient();
@@ -175,7 +177,24 @@ public class Cloud extends Activity implements OnItemClickListener {
 				Log.d("ACTION:", "" + moveList.get(1));
 				Log.d("ACTION:", "" + moveList.get(2));
 				Log.d("ACTION:", "" + moveList.get(3));
+				// List items
 
+				AlertDialog.Builder builder = new AlertDialog.Builder(myContext);
+				builder.setTitle("Select a game to replay:");
+				final ArrayAdapter<String> names = new ArrayAdapter<String>(
+						myContext,
+						android.R.layout.simple_list_item_single_choice,
+						nameList);
+				builder.setSingleChoiceItems(names, 0,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int item) {
+								Log.d("NAME:", "" + nameList.get(item));
+
+							}
+
+						});
+				AlertDialog alert = builder.create();
+				alert.show();
 			}
 		}
 
@@ -191,24 +210,26 @@ public class Cloud extends Activity implements OnItemClickListener {
 		return "?";
 
 	}
+
 	public boolean onCloudButtonClicked(View v) {
 
 		int buttonId = v.getId();
 		switch (buttonId) {
-		/* ROW 1 **************************** */
+
 		case R.id.cloudButton:
 			Intent intent = new Intent(Cloud.this, Cloud.class);
 			intent.putExtra("action", "replay");
 			startActivity(intent);
 			finish();
-		break;
+			break;
 		}
-		
+
 		return true;
 	}
+
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -2,10 +2,7 @@ package edu.uco.sdd.t3.gameboard;
 
 // This is Jack's comment test
 
-
 import java.util.ArrayList;
-
-
 
 import edu.uco.sdd.t3.R;
 import android.os.Bundle;
@@ -34,7 +31,7 @@ public class GameplayView extends Activity implements GameStateListener {
 		mPlayer1 = mCurrentGame.getPlayer1();
 		mPlayer2 = mCurrentGame.getPlayer2();
 		View cloudButton = findViewById(R.id.cloudSave);
-	    cloudButton.setVisibility(View.GONE);
+		cloudButton.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -154,12 +151,12 @@ public class GameplayView extends Activity implements GameStateListener {
 			row = 4;
 			col = 4;
 			break;
-		//Cloud Save
+		// Cloud Save
 		case R.id.cloudSave:
 			cloudSave();
 			break;
 		}
-		
+
 		placeMarker(row, col);
 		return true;
 	}
@@ -297,7 +294,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
 			View cloudButton = findViewById(R.id.cloudSave);
-		    cloudButton.setVisibility(View.GONE);
+			cloudButton.setVisibility(View.GONE);
 		}
 		if (gamemode == "4x4") { // change to gamemode 4x4
 			setContentView(R.layout.activity_gameplay_view_4x4);
@@ -307,7 +304,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
 			View cloudButton = findViewById(R.id.cloudSave);
-		    cloudButton.setVisibility(View.GONE);
+			cloudButton.setVisibility(View.GONE);
 		}
 		if (gamemode == "5x5") { // change to gamemode 5x5
 			setContentView(R.layout.activity_gameplay_view_5x5);
@@ -317,7 +314,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			mPlayer1 = mCurrentGame.getPlayer1();
 			mPlayer2 = mCurrentGame.getPlayer2();
 			View cloudButton = findViewById(R.id.cloudSave);
-		    cloudButton.setVisibility(View.GONE);
+			cloudButton.setVisibility(View.GONE);
 		}
 	}
 
@@ -335,13 +332,13 @@ public class GameplayView extends Activity implements GameStateListener {
 	public void onGameOver(String message) {
 		TextView gameMessage = (TextView) findViewById(R.id.victoryText);
 		gameMessage.setText(message);
-		
-		//set button for cloud save visible
+
+		// set button for cloud save visible
 		View cloudButton = findViewById(R.id.cloudSave);
-	    cloudButton.setVisibility(View.VISIBLE);
+		cloudButton.setVisibility(View.VISIBLE);
 
 	}
-	
+
 	public void cloudSave() {
 		// Code for the cloud replay saving system
 		Board board = mCurrentGame.getmGameBoard();
@@ -362,6 +359,7 @@ public class GameplayView extends Activity implements GameStateListener {
 		intent.putExtra("action", "save");
 		intent.putExtra("history", gameHistory);
 		startActivity(intent);
+		finish();
 	}
 
 	private Game mCurrentGame;
