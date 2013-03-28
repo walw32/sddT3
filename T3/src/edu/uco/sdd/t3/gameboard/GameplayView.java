@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.uco.sdd.t3.R;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -47,30 +48,49 @@ public class GameplayView extends Activity implements GameStateListener {
 
 	public void cloudReplay() {
 		Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + gameHistory);
+		new CloudThread().execute("Replay");
 
-		// SLEEP 2 SECONDS HERE ...
-		final Handler handler = new Handler();
-		Timer t = new Timer();
-		t.schedule(new TimerTask() {
-			public void run() {
-				handler.post(new Runnable() {
+	}
+
+	class CloudThread extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... arg0) {
+			// SLEEP 2 SECONDS HERE ...
+			for (int i = 0; i < gameHistory.length() - 2; i += 3) {
+				String temp = gameHistory.substring(i, i + 3);
+				final int row = Integer.parseInt(temp.substring(1, 2));
+				final int column = Integer.parseInt(temp.substring(2));
+				runOnUiThread(new Runnable() {
 					public void run() {
-						for (int i = 0; i < gameHistory.length() - 2; i += 3) {
-							String temp = gameHistory.substring(i, i + 3);
-							final int row = Integer.parseInt(temp.substring(1,
-									2));
-							final int column = Integer.parseInt(temp
-									.substring(2));
-							placeMarker(row, column);
-						}
+
+						// stuff that updates ui
+
+						placeMarker(row, column);
 					}
 				});
-			}
-		}, 2000);
 
-		// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp);
-		// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp.substring(1,2));
-		// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp.substring(2));
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp);
+				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " +
+				// temp.substring(1,2));
+				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " +
+				// temp.substring(2));
+
+			}
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(String... arg0) {
+			// TODO Auto-generated method stub
+
+		}
 
 	}
 
