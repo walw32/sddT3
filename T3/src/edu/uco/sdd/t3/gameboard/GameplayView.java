@@ -3,9 +3,13 @@ package edu.uco.sdd.t3.gameboard;
 // This is Jack's comment test
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.uco.sdd.t3.R;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,6 +25,7 @@ import android.widget.TextView;
 
 public class GameplayView extends Activity implements GameStateListener {
 	private String gameHistory;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,12 +40,40 @@ public class GameplayView extends Activity implements GameStateListener {
 		if (getIntent().getExtras() != null) {
 			Bundle bundle = getIntent().getExtras();
 			gameHistory = (String) bundle.getSerializable("history");
+			cloudReplay();
 		}
-		cloudReplay();
+
 	}
+
 	public void cloudReplay() {
 		Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + gameHistory);
+
+		// SLEEP 2 SECONDS HERE ...
+		final Handler handler = new Handler();
+		Timer t = new Timer();
+		t.schedule(new TimerTask() {
+			public void run() {
+				handler.post(new Runnable() {
+					public void run() {
+						for (int i = 0; i < gameHistory.length() - 2; i += 3) {
+							String temp = gameHistory.substring(i, i + 3);
+							final int row = Integer.parseInt(temp.substring(1,
+									2));
+							final int column = Integer.parseInt(temp
+									.substring(2));
+							placeMarker(row, column);
+						}
+					}
+				});
+			}
+		}, 2000);
+
+		// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp);
+		// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp.substring(1,2));
+		// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp.substring(2));
+
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
