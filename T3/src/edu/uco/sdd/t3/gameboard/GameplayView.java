@@ -156,24 +156,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			break;
 		//Cloud Save
 		case R.id.cloudSave:
-			// Code for the cloud replay saving system
-			Board board = mCurrentGame.getmGameBoard();
-			ArrayList<MoveAction> history = board.getmGameHistory();
-			MoveAction actions;
-			String gameHistory = "";
-			for (int i = 0; i < history.size(); i++) {
-				actions = history.get(i);
-
-				// do it in 3 lines because adding the ints on 1 line just
-				// make a big int number.. this way preserves each value as
-				// a string concatenation
-				gameHistory += actions.getPlayerId();
-				gameHistory += actions.getX();
-				gameHistory += actions.getY();
-			}
-			Intent intent = new Intent(GameplayView.this, Cloud.class);			
-			intent.putExtra("history", gameHistory);
-			startActivity(intent);
+			cloudSave();
 			break;
 		}
 		
@@ -357,6 +340,28 @@ public class GameplayView extends Activity implements GameStateListener {
 		View cloudButton = findViewById(R.id.cloudSave);
 	    cloudButton.setVisibility(View.VISIBLE);
 
+	}
+	
+	public void cloudSave() {
+		// Code for the cloud replay saving system
+		Board board = mCurrentGame.getmGameBoard();
+		ArrayList<MoveAction> history = board.getmGameHistory();
+		MoveAction actions;
+		String gameHistory = "";
+		for (int i = 0; i < history.size(); i++) {
+			actions = history.get(i);
+
+			// do it in 3 lines because adding the ints on 1 line just
+			// make a big int number.. this way preserves each value as
+			// a string concatenation
+			gameHistory += actions.getPlayerId();
+			gameHistory += actions.getX();
+			gameHistory += actions.getY();
+		}
+		Intent intent = new Intent(GameplayView.this, Cloud.class);
+		intent.putExtra("action", "save");
+		intent.putExtra("history", gameHistory);
+		startActivity(intent);
 	}
 
 	private Game mCurrentGame;
