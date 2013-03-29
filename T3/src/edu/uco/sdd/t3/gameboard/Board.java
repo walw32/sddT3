@@ -4,17 +4,14 @@ package edu.uco.sdd.t3.gameboard;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import android.util.Log;
-
 public class Board {
 
 
-	public Board(Game g, int boardSize) {
-		mCurrentGame = g;
+	public Board(int boardSize) {
 		mStrategy = new PlaceMarkerDirectly(this);
-		mTotalMarkersPlaced = 0;
+		mMarkerCount = 0;
 		mBoardSize = boardSize;
-		setmGameHistory(new ArrayList<MoveAction>());
+		mBoardObservers = new ArrayList<BoardObserver>();
 		mGameBoard = new Vector<Vector<Integer>>();
 		mGameBoard.setSize(mBoardSize);
 		for (int i = 0; i < mBoardSize; i++) {
@@ -29,8 +26,10 @@ public class Board {
 	
 	public boolean placeMarker(MoveAction coord) {
 		if (mStrategy.placeMarker(coord)) {
-			getmGameHistory().add(coord);
-			mTotalMarkersPlaced++;
+			mMarkerCount++;
+			for (BoardObserver observer : mBoardObservers) {
+				observer.onMarkerPlaced(coord);
+			}
 			return true;
 		} else {
 			return false;
@@ -49,26 +48,25 @@ public class Board {
 		return mBoardSize;
 	}
 	
-	public int getTotalMarkersPlaced() {
-		return mTotalMarkersPlaced;
+	public int getMarkerCount() {
+		return mMarkerCount;
 	}
 	
 	public boolean isFilled() {
-		return (mTotalMarkersPlaced >= mBoardSize * mBoardSize);
+		return (mMarkerCount >= mBoardSize * mBoardSize);
 	}
 	
-	public ArrayList<MoveAction> getmGameHistory() {
-		return mGameHistory;
+	public void attachObserver(BoardObserver observer) {
+		mBoardObservers.add(observer);
+	}
+	
+	public void detachObserver(BoardObserver observer) {
+		mBoardObservers.remove(observer);
 	}
 
-	public void setmGameHistory(ArrayList<MoveAction> mGameHistory) {
-		this.mGameHistory = mGameHistory;
-	}
-
-	private Game mCurrentGame;
 	private int mBoardSize;
-	private int mTotalMarkersPlaced;
+	private int mMarkerCount;
 	private MarkerPlacementStrategy mStrategy;
-	private ArrayList<MoveAction> mGameHistory;
+	private ArrayList<BoardObserver> mBoardObservers;
 	private Vector<Vector<Integer>> mGameBoard;
 }

@@ -1,96 +1,65 @@
 package edu.uco.sdd.t3.gameboard;
 
 
+import java.util.ArrayList;
 import java.util.Vector;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
-import edu.uco.sdd.t3.R;
 
-public class Game {
+public class Game implements BoardObserver{
 
 	public enum State {
 		PLAYER_1_TURN, PLAYER_2_TURN, GAME_OVER
 	}
 
-	public Game(Context appContext, int boardSize) {
-		mContext = appContext;
-		setmGameBoard(new Board(this, boardSize));
-		mPlayer1 = new PlayerObject(this, 1);
-		mPlayer2 = new PlayerObject(this, 2);
-		Drawable xImage = mContext.getResources().getDrawable(
-				R.drawable.x_graphic);
-		Drawable oImage = mContext.getResources().getDrawable(
-				R.drawable.o_graphic);
-		Marker X = new Marker(xImage, mPlayer1);
-		Marker O = new Marker(oImage, mPlayer2);
-		mPlayer1.setMarker(X);
-		mPlayer2.setMarker(O);
+	public Game() {
+		mGameObservers = new ArrayList<GameObserver>();
+		mActionHistory = new ArrayList<GameAction>();
 		mGameState = State.PLAYER_1_TURN;
 	}
 
-	public void placeMarker(MoveAction action) {
-		if (mGameState == State.PLAYER_1_TURN) {
-			if (action.getPlayerId() != mPlayer1.getId()) {
-				return;
+	@Override
+	public void onMarkerPlaced(MoveAction action) {
+		int markerCount = action.getBoard().getMarkerCount();
+		int boardSize = action.getBoard().getBoardSize();
+		int maxMarkers = boardSize * boardSize;
+		Log.v("Game", "Marker Count: " + markerCount + " | Max Markers: " + maxMarkers);
+		if (doVictoryEvaluation(action)) {
+			if (mGameState == State.PLAYER_1_TURN) {
+				notify("Game over! Player 1 wins!");
+			} else if (mGameState == State.PLAYER_2_TURN) {
+				notify("Game over! Player 2 wins!");
 			}
-			// If we can place the marker at that location, do stuff.
-			if (getmGameBoard().placeMarker(action)) {
-				if (mGameStateListener != null) {
-					mGameStateListener.onMarkerPlaced(action);
-				}
+			mGameState = State.GAME_OVER;
+		} else if(markerCount == maxMarkers) {
+			notify("Curses! Stalemate!");
+			mGameState = State.GAME_OVER;
+		} else {
+			if (mGameState == State.PLAYER_1_TURN) {
 				mGameState = State.PLAYER_2_TURN;
-				if (doVictoryEvaluation(action)) {
-					mGameState = State.GAME_OVER;
-					Log.d("Game", "Game over! Player 1 wins!");
-					if (mGameStateListener != null) {
-						mGameStateListener.onGameOver("Game over! Player 1 wins!");
-					}
-				} else if (getmGameBoard().isFilled()) {
-					mGameState = State.GAME_OVER;
-					stalemate();
-				}
-			} else {
-				return;
-			}
-		} else if (mGameState == State.PLAYER_2_TURN) {
-			if (action.getPlayerId() != mPlayer2.getId()) {
-				return;
-			}
-			if (getmGameBoard().placeMarker(action)) {
-				if (mGameStateListener != null) {
-					mGameStateListener.onMarkerPlaced(action);
-				}
+			} else if (mGameState == State.PLAYER_2_TURN) {
 				mGameState = State.PLAYER_1_TURN;
-				if (doVictoryEvaluation(action)) {
-					mGameState = State.GAME_OVER;
-					Log.d("Game", "Game over! Player 2 wins!");
-					if (mGameStateListener != null) {
-						mGameStateListener.onGameOver("Game over! Player 2 wins!");
-					} 
-				} else if (getmGameBoard().isFilled()) {
-					mGameState = State.GAME_OVER;
-					stalemate();
-				}
-			} else {
-				return;
 			}
-		} else if (mGameState == State.GAME_OVER) {
-			return;
+		}
+	}
+	
+	public void notify(String message) {
+		for (GameObserver observer : mGameObservers) {
+			observer.onGameOver(message);
 		}
 	}
 
-	public Player getPlayer1() {
-		return mPlayer1;
+	public void attachObserver(GameObserver observer) {
+		mGameObservers.add(observer);
 	}
-
-	public Player getPlayer2() {
-		return mPlayer2;
+	
+	public void detachObserver(GameObserver observer) {
+		mGameObservers.remove(observer);
 	}
-
-	public void setGameStateListener(GameStateListener l) {
-		mGameStateListener = l;
+	
+	public void doAction(GameAction action) {
+		mActionHistory.add(action);
+		action.execute();
 	}
 	
 	public State getGameState() {
@@ -98,8 +67,8 @@ public class Game {
 	}
 
 	private boolean doVictoryEvaluation(MoveAction action) {
-		Vector<Vector<Integer>> gameBoardData = getmGameBoard().getGameBoard();
-		int gameBoardSize = getmGameBoard().getBoardSize();
+		Vector<Vector<Integer>> gameBoardData = action.getBoard().getGameBoard();
+		int gameBoardSize = action.getBoard().getBoardSize();
 		Log.d("VictoryCheck", "gameBoardSize = " + gameBoardSize);
 		int markersNeededToWin = gameBoardSize;
 		int playerKey = action.getPlayerId();
@@ -196,22 +165,12 @@ public class Game {
 		return false;
 	}
 	
-	public void stalemate() {
-		mGameStateListener.onGameOver("Curses! Stalemate!");
-	}
-	
-	public Board getmGameBoard() {
-		return mGameBoard;
+	public ArrayList<GameAction> getActionHistory() {
+		return mActionHistory;
 	}
 
-	public void setmGameBoard(Board mGameBoard) {
-		this.mGameBoard = mGameBoard;
-	}
 
-	private Board mGameBoard;
-	private Player mPlayer1;
-	private Player mPlayer2;
-	private GameStateListener mGameStateListener;
-	private Context mContext;
+	private ArrayList<GameObserver> mGameObservers;
+	private ArrayList<GameAction> mActionHistory;
 	private State mGameState;
 }

@@ -3,30 +3,25 @@ package edu.uco.sdd.t3.gameboard;
 // This is Jack's comment test
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import edu.uco.sdd.t3.R;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import edu.uco.sdd.t3.R;
 
-public class GameplayView extends Activity implements GameStateListener {
+public class GameplayView extends Activity implements GameObserver, BoardObserver {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +32,19 @@ public class GameplayView extends Activity implements GameStateListener {
 			setContentView(R.layout.activity_gameplay_view_3x3);
 			replayBoardSize = "3";
 			boardSize = 3;
-			mCurrentGame = new Game(this, boardSize);
-			mCurrentGame.setGameStateListener(this);
-			mPlayer1 = mCurrentGame.getPlayer1();
-			mPlayer2 = mCurrentGame.getPlayer2();
+			mCurrentGame = new Game();
+			mCurrentGame.attachObserver(this);
+			mBoard = new Board(boardSize);
+			mBoard.attachObserver(this);
+			mBoard.attachObserver(mCurrentGame);
+			mPlayer1 = new Player(mCurrentGame, mBoard, 1);
+			mPlayer2 = new Player(mCurrentGame, mBoard, 2);
+			Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
+			Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
+			MarkerImage X = new MarkerImage(xImage, mPlayer1);
+			MarkerImage O = new MarkerImage(oImage, mPlayer2);
+			mPlayer1.setMarker(X);
+			mPlayer2.setMarker(O);
 			View cloudButton = findViewById(R.id.cloudSave);
 			cloudButton.setVisibility(View.GONE);
 		}
@@ -60,10 +64,19 @@ public class GameplayView extends Activity implements GameStateListener {
 				setContentView(R.layout.activity_gameplay_view_5x5);
 				boardSize = 5;
 			}
-			mCurrentGame = new Game(this, boardSize);
-			mCurrentGame.setGameStateListener(this);
-			mPlayer1 = mCurrentGame.getPlayer1();
-			mPlayer2 = mCurrentGame.getPlayer2();
+			mCurrentGame = new Game();
+			mCurrentGame.attachObserver(this);
+			mBoard = new Board(boardSize);
+			mBoard.attachObserver(this);
+			mBoard.attachObserver(mCurrentGame);
+			mPlayer1 = new Player(mCurrentGame, mBoard, 1);
+			mPlayer2 = new Player(mCurrentGame, mBoard, 2);
+			Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
+			Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
+			MarkerImage X = new MarkerImage(xImage, mPlayer1);
+			MarkerImage O = new MarkerImage(oImage, mPlayer2);
+			mPlayer1.setMarker(X);
+			mPlayer2.setMarker(O);
 			View cloudButton = findViewById(R.id.cloudSave);
 			cloudButton.setVisibility(View.GONE);
 			cloudReplay();
@@ -200,7 +213,7 @@ public class GameplayView extends Activity implements GameStateListener {
 
 	@Override
 	public void onMarkerPlaced(MoveAction action) {
-		Marker markerToPlace;
+		MarkerImage markerToPlace;
 		int playerId = action.getPlayerId();
 		if (playerId == mPlayer1.getId()) {
 			markerToPlace = mPlayer1.getMarker();
@@ -328,47 +341,38 @@ public class GameplayView extends Activity implements GameStateListener {
 	private void newGame(String gamemode) { // added parameter
 		if (gamemode == "3x3") { // change to gamemode 3x3
 			setContentView(R.layout.activity_gameplay_view_3x3);
-			int boardSize = 3;
-			mCurrentGame = new Game(this, boardSize);
-			mCurrentGame.setGameStateListener(this);
-			mPlayer1 = mCurrentGame.getPlayer1();
-			mPlayer2 = mCurrentGame.getPlayer2();
-			View cloudButton = findViewById(R.id.cloudSave);
-			cloudButton.setVisibility(View.GONE);
-			replayBoardSize = "3";
+			newGame(3);
 		}
 		if (gamemode == "4x4") { // change to gamemode 4x4
 			setContentView(R.layout.activity_gameplay_view_4x4);
-			int boardSize = 4;
-			mCurrentGame = new Game(this, boardSize);
-			mCurrentGame.setGameStateListener(this);
-			mPlayer1 = mCurrentGame.getPlayer1();
-			mPlayer2 = mCurrentGame.getPlayer2();
-			View cloudButton = findViewById(R.id.cloudSave);
-			cloudButton.setVisibility(View.GONE);
-			replayBoardSize = "4";
+			newGame(4);
 		}
 		if (gamemode == "5x5") { // change to gamemode 5x5
 			setContentView(R.layout.activity_gameplay_view_5x5);
-			int boardSize = 5;
-			mCurrentGame = new Game(this, boardSize);
-			mCurrentGame.setGameStateListener(this);
-			mPlayer1 = mCurrentGame.getPlayer1();
-			mPlayer2 = mCurrentGame.getPlayer2();
-			View cloudButton = findViewById(R.id.cloudSave);
-			cloudButton.setVisibility(View.GONE);
-			replayBoardSize = "5";
+			newGame(5);
 		}
 	}
 
-	private void newGame() {
-		setContentView(R.layout.activity_gameplay_view_3x3);
-		int boardSize = 3;
-		mCurrentGame = new Game(this, boardSize);
-		mCurrentGame.setGameStateListener(this);
-		mPlayer1 = mCurrentGame.getPlayer1();
-
-		mPlayer2 = mCurrentGame.getPlayer2();
+	private void newGame(Integer boardSize) {
+		mCurrentGame.detachObserver(this);
+		mBoard.detachObserver(mCurrentGame);
+		mCurrentGame = new Game();
+		mCurrentGame.attachObserver(this);
+		mBoard.detachObserver(this);
+		mBoard = new Board(boardSize);
+		mBoard.attachObserver(this);
+		mBoard.attachObserver(mCurrentGame);
+		mPlayer1 = new Player(mCurrentGame, mBoard, 1);
+		mPlayer2 = new Player(mCurrentGame, mBoard, 2);
+		Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
+		Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
+		MarkerImage X = new MarkerImage(xImage, mPlayer1);
+		MarkerImage O = new MarkerImage(oImage, mPlayer2);
+		mPlayer1.setMarker(X);
+		mPlayer2.setMarker(O);
+		View cloudButton = findViewById(R.id.cloudSave);
+		cloudButton.setVisibility(View.GONE);
+		replayBoardSize = boardSize.toString();
 	}
 
 	@Override
@@ -383,14 +387,19 @@ public class GameplayView extends Activity implements GameStateListener {
 
 	}
 
+	/*
+	 * Last modified by Josh on 3/29/2013
+	 * 
+	 * Tried to add some compatibility to the cloudSave feature during my giant refactoring.
+	 */
 	public void cloudSave() {
 		// Code for the cloud replay saving system
-		Board board = mCurrentGame.getmGameBoard();
-		ArrayList<MoveAction> history = board.getmGameHistory();
+		mBoard.getGameBoard();
+		ArrayList<GameAction> history = mCurrentGame.getActionHistory();
 		MoveAction actions;
 		gameHistory = "";
 		for (int i = 0; i < history.size(); i++) {
-			actions = history.get(i);
+			actions = (MoveAction) history.get(i);
 
 			// do it in 3 lines because adding the ints on 1 line just
 			// make a big int number.. this way preserves each value as
@@ -479,6 +488,7 @@ public class GameplayView extends Activity implements GameStateListener {
 	private String saveName;
 	private String replayBoardSize;
 	private Game mCurrentGame;
+	private Board mBoard;
 	private Player mPlayer1;
 	private Player mPlayer2;
 }
