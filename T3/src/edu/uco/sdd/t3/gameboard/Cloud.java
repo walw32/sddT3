@@ -50,8 +50,10 @@ public class Cloud extends Activity implements OnItemClickListener {
 	private String gameID;
 	private String action;
 	private String xml;
+	private String boardSize;
 	private ArrayList<String> nameList = new ArrayList<String>();
 	private ArrayList<String> moveList = new ArrayList<String>();
+	private ArrayList<String> sizeList = new ArrayList<String>();
 	private ListView lv;
 	private Context myContext = this;
 	private AlertDialog alert;
@@ -70,6 +72,7 @@ public class Cloud extends Activity implements OnItemClickListener {
 		Log.d("ACTION:", "" + action);
 		if (action.equals("save")) {
 			gameHistory = (String) bundle.getSerializable("history");
+			boardSize = (String) bundle.getSerializable("boardSize");
 			saveName = (String) bundle.getSerializable("saveName");
 			try {
 				gameID = URLEncoder.encode(saveName, "utf-8");
@@ -89,7 +92,7 @@ public class Cloud extends Activity implements OnItemClickListener {
 		// this search uses coordinates (nearby search, no multiplier)
 
 		cloudHttp = "http://herura.com/cloud.php?code=toongo&name=" + gameID
-				+ "&moves=" + gameHistory + "&action=save";
+				+ "&moves=" + gameHistory + "&size=" +boardSize+ "&action=save";
 
 		new CloudHelper().execute(cloudHttp);
 	}
@@ -172,6 +175,10 @@ public class Cloud extends Activity implements OnItemClickListener {
 						NodeList move = element.getElementsByTagName("move");
 						line = (Element) move.item(0);
 						moveList.add(getCharacterDataFromElement(line));
+						
+						NodeList size = element.getElementsByTagName("size");
+						line = (Element) size.item(0);
+						sizeList.add(getCharacterDataFromElement(line));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -193,6 +200,7 @@ public class Cloud extends Activity implements OnItemClickListener {
 								Intent intent = new Intent(Cloud.this,
 										GameplayView.class);
 								intent.putExtra("history", moveList.get(item));
+								intent.putExtra("boardSize", sizeList.get(item));
 								startActivity(intent);
 								stopDialog();
 								finish();

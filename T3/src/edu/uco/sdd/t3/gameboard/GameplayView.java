@@ -31,17 +31,41 @@ public class GameplayView extends Activity implements GameStateListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_gameplay_view_3x3);
-		int boardSize = 3;
-		mCurrentGame = new Game(this, boardSize);
-		mCurrentGame.setGameStateListener(this);
-		mPlayer1 = mCurrentGame.getPlayer1();
-		mPlayer2 = mCurrentGame.getPlayer2();
-		View cloudButton = findViewById(R.id.cloudSave);
-		cloudButton.setVisibility(View.GONE);
-		if (getIntent().getExtras() != null) {
+
+		// not a cloud-replay game, default board size (at least until we implement configuration screen)
+		if (getIntent().getExtras() == null) {
+			setContentView(R.layout.activity_gameplay_view_3x3);
+			replayBoardSize = "3";
+			boardSize = 3;
+			mCurrentGame = new Game(this, boardSize);
+			mCurrentGame.setGameStateListener(this);
+			mPlayer1 = mCurrentGame.getPlayer1();
+			mPlayer2 = mCurrentGame.getPlayer2();
+			View cloudButton = findViewById(R.id.cloudSave);
+			cloudButton.setVisibility(View.GONE);
+		}
+
+		// this means it's a cloud-replay game 
+		else {
 			Bundle bundle = getIntent().getExtras();
 			gameHistory = (String) bundle.getSerializable("history");
+			replayBoardSize = (String) bundle.getSerializable("boardSize");
+			if (replayBoardSize.equals("3")) {
+				setContentView(R.layout.activity_gameplay_view_3x3);
+				boardSize = 3;
+			} else if (replayBoardSize.equals("4")) {
+				setContentView(R.layout.activity_gameplay_view_4x4);
+				boardSize = 4;
+			} else if (replayBoardSize.equals("5")) {
+				setContentView(R.layout.activity_gameplay_view_5x5);
+				boardSize = 5;
+			}
+			mCurrentGame = new Game(this, boardSize);
+			mCurrentGame.setGameStateListener(this);
+			mPlayer1 = mCurrentGame.getPlayer1();
+			mPlayer2 = mCurrentGame.getPlayer2();
+			View cloudButton = findViewById(R.id.cloudSave);
+			cloudButton.setVisibility(View.GONE);
 			cloudReplay();
 		}
 
@@ -281,12 +305,15 @@ public class GameplayView extends Activity implements GameStateListener {
 				public void onClick(DialogInterface dialog, int item) {
 					if (item == 0) {
 						newGame("3x3");
+
 					}
 					if (item == 1) {
 						newGame("4x4");
+
 					}
 					if (item == 2) {
 						newGame("5x5");
+
 					}
 				}
 			});
@@ -308,6 +335,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			mPlayer2 = mCurrentGame.getPlayer2();
 			View cloudButton = findViewById(R.id.cloudSave);
 			cloudButton.setVisibility(View.GONE);
+			replayBoardSize = "3";
 		}
 		if (gamemode == "4x4") { // change to gamemode 4x4
 			setContentView(R.layout.activity_gameplay_view_4x4);
@@ -318,6 +346,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			mPlayer2 = mCurrentGame.getPlayer2();
 			View cloudButton = findViewById(R.id.cloudSave);
 			cloudButton.setVisibility(View.GONE);
+			replayBoardSize = "4";
 		}
 		if (gamemode == "5x5") { // change to gamemode 5x5
 			setContentView(R.layout.activity_gameplay_view_5x5);
@@ -328,6 +357,7 @@ public class GameplayView extends Activity implements GameStateListener {
 			mPlayer2 = mCurrentGame.getPlayer2();
 			View cloudButton = findViewById(R.id.cloudSave);
 			cloudButton.setVisibility(View.GONE);
+			replayBoardSize = "5";
 		}
 	}
 
@@ -388,6 +418,7 @@ public class GameplayView extends Activity implements GameStateListener {
 				intent.putExtra("action", "save");
 				intent.putExtra("saveName", saveName);
 				intent.putExtra("history", gameHistory);
+				intent.putExtra("boardSize", replayBoardSize);
 				startActivity(intent);
 				finish();
 			}
@@ -443,8 +474,10 @@ public class GameplayView extends Activity implements GameStateListener {
 
 	}
 
+	private int boardSize;
 	private String gameHistory;
 	private String saveName;
+	private String replayBoardSize;
 	private Game mCurrentGame;
 	private Player mPlayer1;
 	private Player mPlayer2;
