@@ -4,6 +4,12 @@ import java.util.Vector;
 
 import android.util.Log;
 
+/**
+ * Strategy for placing a marker directly on the game board.
+ * 
+ * @author Joshua Ford
+ * @version 1.0
+ */
 public class PlaceMarkerDirectly implements MarkerPlacementStrategy {
 
 	private Board mGameBoard;
