@@ -41,8 +41,8 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 			mPlayer2 = new Player(mCurrentGame, mBoard, 2);
 			Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
 			Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
-			MarkerImage X = new MarkerImage(xImage, mPlayer1);
-			MarkerImage O = new MarkerImage(oImage, mPlayer2);
+			MarkerImage X = new MarkerImage(xImage);
+			MarkerImage O = new MarkerImage(oImage);
 			mPlayer1.setMarker(X);
 			mPlayer2.setMarker(O);
 			View cloudButton = findViewById(R.id.cloudSave);
@@ -73,8 +73,8 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 			mPlayer2 = new Player(mCurrentGame, mBoard, 2);
 			Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
 			Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
-			MarkerImage X = new MarkerImage(xImage, mPlayer1);
-			MarkerImage O = new MarkerImage(oImage, mPlayer2);
+			MarkerImage X = new MarkerImage(xImage);
+			MarkerImage O = new MarkerImage(oImage);
 			mPlayer1.setMarker(X);
 			mPlayer2.setMarker(O);
 			View cloudButton = findViewById(R.id.cloudSave);
@@ -366,8 +366,8 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 		mPlayer2 = new Player(mCurrentGame, mBoard, 2);
 		Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
 		Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
-		MarkerImage X = new MarkerImage(xImage, mPlayer1);
-		MarkerImage O = new MarkerImage(oImage, mPlayer2);
+		MarkerImage X = new MarkerImage(xImage);
+		MarkerImage O = new MarkerImage(oImage);
 		mPlayer1.setMarker(X);
 		mPlayer2.setMarker(O);
 		View cloudButton = findViewById(R.id.cloudSave);
