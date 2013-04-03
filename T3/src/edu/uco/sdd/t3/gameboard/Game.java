@@ -8,6 +8,10 @@ import android.util.Log;
 
 public class Game implements BoardObserver{
 
+	public enum Mode {
+		NORMAL, SUDDEN_DEATH
+	}
+	
 	public enum State {
 		PLAYER_1_TURN, PLAYER_2_TURN, GAME_OVER
 	}
