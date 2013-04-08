@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,9 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 			boardSize = 3;
 			mCurrentGame = new Game();
 			mCurrentGame.attachObserver(this);
+			TimeoutClock timer = new TimeoutClock(mHandler, 15000);
+			mCurrentGame.setTimer(timer);
+			timer.attachGame(mCurrentGame);
 			mBoard = new Board(boardSize);
 			mBoard.attachObserver(this);
 			mBoard.attachObserver(mCurrentGame);
@@ -342,14 +346,23 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 		if (gamemode == "3x3") { // change to gamemode 3x3
 			setContentView(R.layout.activity_gameplay_view_3x3);
 			newGame(3);
+			TimeoutClock timer = new TimeoutClock(mHandler, 15000);
+			mCurrentGame.setTimer(timer);
+			timer.attachGame(mCurrentGame);
 		}
 		if (gamemode == "4x4") { // change to gamemode 4x4
 			setContentView(R.layout.activity_gameplay_view_4x4);
 			newGame(4);
+			TimeoutClock timer = new TimeoutClock(mHandler, 30000);
+			mCurrentGame.setTimer(timer);
+			timer.attachGame(mCurrentGame);
 		}
 		if (gamemode == "5x5") { // change to gamemode 5x5
 			setContentView(R.layout.activity_gameplay_view_5x5);
 			newGame(5);
+			TimeoutClock timer = new TimeoutClock(mHandler, 45000);
+			mCurrentGame.setTimer(timer);
+			timer.attachGame(mCurrentGame);
 		}
 	}
 
@@ -491,4 +504,5 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 	private Board mBoard;
 	private Player mPlayer1;
 	private Player mPlayer2;
+	private Handler mHandler = new Handler();
 }

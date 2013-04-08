@@ -50,7 +50,6 @@ public class Board {
 			for (BoardObserver observer : mBoardObservers) {
 				observer.onMarkerPlaced(action);
 			}
-			action.getGame().getTimer().reset();
 			return true;
 		} else {
 			return false;

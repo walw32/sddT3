@@ -78,6 +78,9 @@ public class Game implements BoardObserver{
 	 */
 	@Override
 	public void onMarkerPlaced(MoveAction action) {
+		if (mTimer != null) {
+			mTimer.stop();
+		}
 		int markerCount = action.getBoard().getMarkerCount();
 		int boardSize = action.getBoard().getBoardSize();
 		int maxMarkers = boardSize * boardSize;
@@ -96,6 +99,10 @@ public class Game implements BoardObserver{
 			} else if (mGameState == State.PLAYER_2_TURN) {
 				mGameState = State.PLAYER_1_TURN;
 			}
+		}
+		if (mTimer != null) {
+			mTimer.reset();
+			mTimer.start();
 		}
 	}
 	

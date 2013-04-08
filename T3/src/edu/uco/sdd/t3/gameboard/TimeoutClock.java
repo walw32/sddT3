@@ -1,5 +1,7 @@
 package edu.uco.sdd.t3.gameboard;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 /**
@@ -15,7 +17,8 @@ public class TimeoutClock {
 	 * 
 	 * @param timeInMillis The countdown time.
 	 */
-	public TimeoutClock(long timeInMillis) {
+	public TimeoutClock(Handler handler, long timeInMillis) {
+		mMainHandler = handler;
 		mTimerLength = timeInMillis;
 		mClock = new Thread(new ClockThread(timeInMillis));
 	}
@@ -51,6 +54,7 @@ public class TimeoutClock {
 	 * Resets the TimeoutClock to the countdown time.
 	 */
 	public void reset() {
+		mClock.interrupt();
 		mClock = new Thread(new ClockThread(mTimerLength));
 		Log.v("TimeoutClock", "Clock reset!");
 	}
@@ -75,22 +79,29 @@ public class TimeoutClock {
 		@Override
 		public void run() {
 			try {
+				Log.v("ClockThread", "ClockThread started.");
 				mStartTime = System.currentTimeMillis();
 				mStopTime = mStartTime + mLength;
 				long currentTime = mStartTime;
 				long currentLength = mStopTime - currentTime;
-				while (currentLength < mLength) {
+				Log.v("ClockThread", "currentLength = " + currentLength);
+				while (currentLength > 0) {
+					Log.v("ClockThread", "currentLength = " + currentLength);
 					Thread.sleep(100);	
 					currentTime = System.currentTimeMillis();
 					currentLength = mStopTime - currentTime;
 				}
 				if (mGame != null) {
-					mGame.timeExhausted();
+					Log.v("ClockThread", "currentLength = " + currentLength);
+					mMainHandler.post(new Runnable() {
+						public void run() {
+							mGame.timeExhausted();
+						}
+					});
 				}
 			} catch (InterruptedException e) {
 				
-			}
-			
+			}		
 		}
 		private long mStartTime;
 		private long mStopTime;
@@ -100,6 +111,7 @@ public class TimeoutClock {
 	private Thread mClock;
 	private long mTimerLength;
 	private Game mGame;
+	private Handler mMainHandler;
 	
 
 }
