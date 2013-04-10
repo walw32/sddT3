@@ -22,13 +22,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import edu.uco.sdd.t3.R;
 
-public class GameplayView extends Activity implements GameObserver, BoardObserver {
+public class GameplayView extends Activity implements GameObserver,
+		BoardObserver {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// not a cloud-replay game, default board size (at least until we implement configuration screen)
+		// not a cloud-replay game, default board size (at least until we
+		// implement configuration screen)
 		if (getIntent().getExtras() == null) {
 			setContentView(R.layout.activity_gameplay_view_3x3);
 			replayBoardSize = "3";
@@ -50,10 +52,12 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 			mPlayer1.setMarker(X);
 			mPlayer2.setMarker(O);
 			View cloudButton = findViewById(R.id.cloudSave);
+			View nextMoveButton = findViewById(R.id.nextMove);
 			cloudButton.setVisibility(View.GONE);
+			nextMoveButton.setVisibility(View.GONE);
 		}
 
-		// this means it's a cloud-replay game 
+		// this means it's a cloud-replay game
 		else {
 			Bundle bundle = getIntent().getExtras();
 			gameHistory = (String) bundle.getSerializable("history");
@@ -82,7 +86,9 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 			mPlayer1.setMarker(X);
 			mPlayer2.setMarker(O);
 			View cloudButton = findViewById(R.id.cloudSave);
+			View nextMoveButton = findViewById(R.id.nextMove);
 			cloudButton.setVisibility(View.GONE);
+			nextMoveButton.setVisibility(View.GONE);
 			cloudReplay();
 		}
 
@@ -94,7 +100,22 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 		getMenuInflater().inflate(R.menu.gameplay_view, menu);
 		return true;
 	}
-
+	
+	//need a separate one for cloud replay buttons due to how marker is placed in onButtonClicked...
+	public boolean onReplayButtonClicked(View v) {
+		int buttonId = v.getId();
+		switch (buttonId) {
+		// Cloud Save
+		case R.id.cloudSave:
+			cloudSave();
+			break;
+		// Cloud Replay
+		case R.id.nextMove:
+			cloudReplay();
+			break;
+		}
+		return true;
+	}
 	public boolean onButtonClicked(View v) {
 		int row = -1;
 		int col = -1;
@@ -204,10 +225,6 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 		case R.id.row5col5:
 			row = 4;
 			col = 4;
-			break;
-		// Cloud Save
-		case R.id.cloudSave:
-			cloudSave();
 			break;
 		}
 
@@ -384,7 +401,9 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 		mPlayer1.setMarker(X);
 		mPlayer2.setMarker(O);
 		View cloudButton = findViewById(R.id.cloudSave);
+		View nextMoveButton = findViewById(R.id.nextMove);
 		cloudButton.setVisibility(View.GONE);
+		nextMoveButton.setVisibility(View.GONE);
 		replayBoardSize = boardSize.toString();
 	}
 
@@ -396,14 +415,17 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 		// set button for cloud save visible
 
 		View cloudButton = findViewById(R.id.cloudSave);
+		View nextMoveButton = findViewById(R.id.nextMove);
 		cloudButton.setVisibility(View.VISIBLE);
+		nextMoveButton.setVisibility(View.GONE);
 
 	}
 
 	/*
 	 * Last modified by Josh on 3/29/2013
 	 * 
-	 * Tried to add some compatibility to the cloudSave feature during my giant refactoring.
+	 * Tried to add some compatibility to the cloudSave feature during my giant
+	 * refactoring.
 	 */
 	public void cloudSave() {
 		// Code for the cloud replay saving system
@@ -450,6 +472,8 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 
 	public void cloudReplay() {
 		Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + gameHistory);
+		View nextMoveButton = findViewById(R.id.nextMove);
+		nextMoveButton.setVisibility(View.VISIBLE);
 		new CloudThread().execute("Replay");
 
 	}
@@ -458,33 +482,45 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 
 		@Override
 		protected String doInBackground(String... arg0) {
-			// SLEEP 2 SECONDS HERE ...
-			for (int i = 0; i < gameHistory.length() - 2; i += 3) {
-				String temp = gameHistory.substring(i, i + 3);
+			// if there are still moves to be replayed
+			if (replayCounter < gameHistory.length() - 2) {
+				
+				String temp = gameHistory.substring(replayCounter,
+						replayCounter + 3);
+				Log.d("ROW, COLUMN", "ARE = " + temp);
 				final int row = Integer.parseInt(temp.substring(1, 2));
 				final int column = Integer.parseInt(temp.substring(2));
 				runOnUiThread(new Runnable() {
 					public void run() {
-
 						// stuff that updates ui
-
 						placeMarker(row, column);
 					}
 				});
-
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " + temp);
-				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " +
-				// temp.substring(1,2));
-				// Log.d("REPLAY, GAMEPLAYVIEW", "MOVES = " +
-				// temp.substring(2));
-
+				replayCounter += 3;
 			}
+			// replay is finished, hide button
+			else {
+				View nextMoveButton = findViewById(R.id.nextMove);
+				nextMoveButton.setVisibility(View.GONE);
+			}
+			/*
+			 * // old looped way of replaying ... for (int i = 0; i <
+			 * gameHistory.length() - 2; i += 3) { String temp =
+			 * gameHistory.substring(i, i + 3); final int row =
+			 * Integer.parseInt(temp.substring(1, 2)); final int column =
+			 * Integer.parseInt(temp.substring(2)); runOnUiThread(new Runnable()
+			 * { public void run() {
+			 * 
+			 * // stuff that updates ui
+			 * 
+			 * placeMarker(row, column); } });
+			 * 
+			 * try { Thread.sleep(1000); } catch (InterruptedException e) { //
+			 * TODO Auto-generated catch block e.printStackTrace(); }
+			 * 
+			 * 
+			 * }
+			 */
 			return null;
 		}
 
@@ -496,6 +532,7 @@ public class GameplayView extends Activity implements GameObserver, BoardObserve
 
 	}
 
+	private int replayCounter = 0;
 	private int boardSize;
 	private String gameHistory;
 	private String saveName;
