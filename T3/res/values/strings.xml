@@ -4,5 +4,8 @@
     <string name="app_name">T3</string>
     <string name="new_game_string">New Game</string>
     <string name="gameOutcome"></string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main_menu">MainMenu</string>
 
 </resources>

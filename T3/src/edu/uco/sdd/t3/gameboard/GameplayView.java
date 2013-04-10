@@ -29,15 +29,28 @@ public class GameplayView extends Activity implements GameObserver,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Bundle bundle = getIntent().getExtras();
+		gameType = (Integer) bundle.getSerializable("gameType");
 		// not a cloud-replay game, default board size (at least until we
 		// implement configuration screen)
-		if (getIntent().getExtras() == null) {
-			setContentView(R.layout.activity_gameplay_view_3x3);
-			replayBoardSize = "3";
-			boardSize = 3;
+		if (gameType == 1) {
+			boardSize = (Integer) bundle.getSerializable("gameSize");
+			switch (boardSize) {
+			case 3:
+				setContentView(R.layout.activity_gameplay_view_3x3);
+				break;
+			case 4:
+				setContentView(R.layout.activity_gameplay_view_4x4);
+				break;
+			case 5:
+				setContentView(R.layout.activity_gameplay_view_5x5);
+				break;
+			}
+			replayBoardSize = String.valueOf(boardSize);
 			mCurrentGame = new Game();
 			mCurrentGame.attachObserver(this);
-			TimeoutClock timer = new TimeoutClock(mHandler, 15000);
+			TimeoutClock timer = new TimeoutClock(mHandler,
+					((Integer) bundle.getSerializable("gameTimeout") * 1000));
 			mCurrentGame.setTimer(timer);
 			timer.attachGame(mCurrentGame);
 			mBoard = new Board(boardSize);
@@ -58,8 +71,7 @@ public class GameplayView extends Activity implements GameObserver,
 		}
 
 		// this means it's a cloud-replay game
-		else {
-			Bundle bundle = getIntent().getExtras();
+		else if (gameType == 4) {
 			gameHistory = (String) bundle.getSerializable("history");
 			replayBoardSize = (String) bundle.getSerializable("boardSize");
 			if (replayBoardSize.equals("3")) {
@@ -100,8 +112,9 @@ public class GameplayView extends Activity implements GameObserver,
 		getMenuInflater().inflate(R.menu.gameplay_view, menu);
 		return true;
 	}
-	
-	//need a separate one for cloud replay buttons due to how marker is placed in onButtonClicked...
+
+	// need a separate one for cloud replay buttons due to how marker is placed
+	// in onButtonClicked...
 	public boolean onReplayButtonClicked(View v) {
 		int buttonId = v.getId();
 		switch (buttonId) {
@@ -116,6 +129,7 @@ public class GameplayView extends Activity implements GameObserver,
 		}
 		return true;
 	}
+
 	public boolean onButtonClicked(View v) {
 		int row = -1;
 		int col = -1;
@@ -484,7 +498,7 @@ public class GameplayView extends Activity implements GameObserver,
 		protected String doInBackground(String... arg0) {
 			// if there are still moves to be replayed
 			if (replayCounter < gameHistory.length() - 2) {
-				
+
 				String temp = gameHistory.substring(replayCounter,
 						replayCounter + 3);
 				Log.d("ROW, COLUMN", "ARE = " + temp);
@@ -500,8 +514,12 @@ public class GameplayView extends Activity implements GameObserver,
 			}
 			// replay is finished, hide button
 			else {
-				View nextMoveButton = findViewById(R.id.nextMove);
-				nextMoveButton.setVisibility(View.GONE);
+				runOnUiThread(new Runnable() {
+					public void run() {
+						View nextMoveButton = findViewById(R.id.nextMove);
+						nextMoveButton.setVisibility(View.GONE);
+					}
+				});
 			}
 			/*
 			 * // old looped way of replaying ... for (int i = 0; i <
@@ -532,6 +550,9 @@ public class GameplayView extends Activity implements GameObserver,
 
 	}
 
+	// gameType will be '1' for single player, '2' for hosted-network game, '3'
+	// for joined-network game, and '4' for cloud-replay
+	private int gameType;
 	private int replayCounter = 0;
 	private int boardSize;
 	private String gameHistory;

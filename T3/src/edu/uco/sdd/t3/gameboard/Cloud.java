@@ -152,7 +152,9 @@ public class Cloud extends Activity implements OnItemClickListener {
 		@Override
 		protected void onPostExecute(String unused) {
 			if (action.equals("save")) {
-				setContentView(R.layout.main_menu);
+				Intent intent = new Intent(Cloud.this, MainMenu.class);
+				startActivity(intent);
+				finish();
 			} else {
 				try {
 					DocumentBuilderFactory dbf = DocumentBuilderFactory
@@ -201,6 +203,7 @@ public class Cloud extends Activity implements OnItemClickListener {
 										GameplayView.class);
 								intent.putExtra("history", moveList.get(item));
 								intent.putExtra("boardSize", sizeList.get(item));
+								intent.putExtra("gameType", 4);
 								startActivity(intent);
 								stopDialog();
 								finish();
@@ -225,21 +228,6 @@ public class Cloud extends Activity implements OnItemClickListener {
 
 	}
 
-	public boolean onCloudButtonClicked(View v) {
-
-		int buttonId = v.getId();
-		switch (buttonId) {
-
-		case R.id.cloudButton:
-			Intent intent = new Intent(Cloud.this, Cloud.class);
-			intent.putExtra("action", "replay");
-			startActivity(intent);
-			finish();
-			break;
-		}
-
-		return true;
-	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
