@@ -32,17 +32,17 @@
 		android1:layout_alignParentRight="true" android1:layout_alignTop="@+id/boardSizes"
 		android1:layout_marginRight="20dp">
 
-		<RadioButton android1:id="@+id/ten" android1:layout_width="wrap_content"
+		<RadioButton android1:id="@+id/fifteen" android1:layout_width="wrap_content"
 			android1:layout_height="wrap_content" android1:checked="true"
-			android1:text="10 sec." />
-
-		<RadioButton android1:id="@+id/twenty"
-			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
-			android1:text="20 sec." />
+			android1:text="15 sec." />
 
 		<RadioButton android1:id="@+id/thirty"
 			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
 			android1:text="30 sec." />
+
+		<RadioButton android1:id="@+id/fortyfive"
+			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
+			android1:text="45 sec." />
 	</RadioGroup>
 
 	<TextView android1:id="@+id/textView2" android1:layout_width="wrap_content"
@@ -58,6 +58,7 @@
 	<Button android1:id="@+id/playGame" android1:layout_width="wrap_content"
 		android1:layout_height="wrap_content" android1:layout_below="@+id/timeoutThresholds"
 		android1:layout_centerHorizontal="true" android1:layout_marginTop="46dp"
+		android:onClick="onMenuButtonClicked"
 		android1:text="Play Game!" />
 
 </RelativeLayout>

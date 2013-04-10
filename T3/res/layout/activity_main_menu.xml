@@ -6,6 +6,7 @@
 
     <Button
         android:id="@+id/singlePlayerButton"
+        android:onClick="onMenuButtonClicked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -24,6 +25,7 @@
 
     <Button
         android:id="@+id/multiPlayerButton"
+        android:onClick="onMenuButtonClicked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/singlePlayerButton"
@@ -33,7 +35,7 @@
 
     <Button
         android:id="@+id/cloudButton"
-        android:onClick="onCloudButtonClicked"
+        android:onClick="onMenuButtonClicked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

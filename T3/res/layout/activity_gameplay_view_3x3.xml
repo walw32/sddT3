@@ -114,7 +114,13 @@
         android:id="@+id/cloudSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onButtonClicked"
+        android:onClick="onReplayButtonClicked"
         android:text="Save Game to Cloud" />
+            <Button
+        android:id="@+id/nextMove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onReplayButtonClicked"
+        android:text="Next Move" />
 
 </LinearLayout>
