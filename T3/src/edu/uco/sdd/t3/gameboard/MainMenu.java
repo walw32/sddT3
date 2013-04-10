@@ -64,7 +64,7 @@ public class MainMenu extends Activity {
 			break;
 
 		// BUTTONS FOR CONFIGURATION SUBMISSION
-
+			//
 		// single player game, gameType is 1
 		case R.id.playGame:
 			// Gets a reference to our radio group
