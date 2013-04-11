@@ -1,70 +1,48 @@
 package edu.uco.sdd.t3.gameboard;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-
 import edu.uco.sdd.t3.R;
-
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import android.app.Activity;
-import android.view.Menu;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class Client extends Activity {
-TextView serverMessage;
-Thread m_objThreadClient;
-Socket clientSocket;
-Bundle bundle = getIntent().getExtras();
-String ipString = bundle.getString("IP");
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.multiplayer_game_configuration);
-        serverMessage=(TextView)findViewById(R.id.IPText);
-    }
-public void Start(View view)
-{
-	m_objThreadClient=new Thread(new Runnable() {
-		  public void run()
-	       {
-	          try 
-	           {
-				 clientSocket= new Socket(ipString, 40000);
-				 ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
-			     oos.writeObject("Hello there");
-			     Message serverMessage= Message.obtain();
-			     ObjectInputStream ois =new ObjectInputStream(clientSocket.getInputStream());
-			     String strMessage = (String)ois.readObject();
-			    serverMessage.obj=strMessage;
-                mHandler.sendMessage(serverMessage); 
-			    oos.close();
-			    ois.close();
-			   } 
-	           catch (Exception e) 
-	           {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				 
-	         }
-			});
-	 
-	 m_objThreadClient.start();
 
-}
-Handler mHandler = new Handler() {
+	private Socket client;
+	private PrintWriter printwriter;
+	private EditText textField;
+	private Button button;
+	private String message;
+
 	@Override
-	public void handleMessage(Message msg) {
-		messageDisplay(msg.obj.toString());
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.multiplayer_game_configuration);
+
+		String ipString = getIntent().getExtras().getString("IP");
+		textField = (EditText) findViewById(R.id.IPText); // reference to the
+															// text field
+
+		try {
+			message = "Did you get this message?";
+			client = new Socket(ipString, 40000); // connect to server
+			printwriter = new PrintWriter(client.getOutputStream(), true);
+			printwriter.write(message); // write the message to output stream
+			textField.setText("Sent message...");
+
+			printwriter.flush();
+			printwriter.close();
+			client.close(); // closing the connection
+
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-};
-public void messageDisplay(String servermessage)
-{
-	serverMessage.setText(""+servermessage);
-}
-   
 }
