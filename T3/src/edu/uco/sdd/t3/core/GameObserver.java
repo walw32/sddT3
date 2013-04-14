@@ -1,4 +1,4 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
 
 /**
  * Used to observe a game's state, and receives a message upon

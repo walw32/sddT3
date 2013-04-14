@@ -1,4 +1,4 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,6 +25,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import edu.uco.sdd.t3.R;
+import edu.uco.sdd.t3.core.GameplayView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

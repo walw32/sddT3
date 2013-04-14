@@ -1,4 +1,4 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
 
 /**
  * Controls how markers are placed on the board.

@@ -1,4 +1,5 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
+
 
 /**
  * Represents the moves that player's make on the game board.

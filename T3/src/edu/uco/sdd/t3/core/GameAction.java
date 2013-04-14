@@ -1,4 +1,5 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
+
 
 /**
  * Represents an action that is being done in the game. Typically instantiated

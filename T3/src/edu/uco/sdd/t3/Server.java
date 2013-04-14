@@ -1,4 +1,4 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3;
 
 import edu.uco.sdd.t3.R;
 import java.io.BufferedReader;

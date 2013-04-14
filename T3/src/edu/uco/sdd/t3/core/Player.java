@@ -1,4 +1,5 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
+
 
 /**
  * Represents the Player in a game of tic-tac-toe. 

@@ -1,4 +1,4 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
 
 // This is Jack's comment test
 
@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import edu.uco.sdd.t3.Cloud;
 import edu.uco.sdd.t3.R;
 
 public class GameplayView extends Activity implements GameObserver,

@@ -1,8 +1,9 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
 
 
 import java.util.ArrayList;
 import java.util.Vector;
+
 
 /**
  * Data structure used to keep track of markers being placed. It is also

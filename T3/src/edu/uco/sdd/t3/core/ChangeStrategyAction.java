@@ -1,6 +1,6 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
 
-import edu.uco.sdd.t3.gameboard.Game.Mode;
+import edu.uco.sdd.t3.core.Game.Mode;
 
 /**
  * A GameAction that signifies a change of state in the Game.

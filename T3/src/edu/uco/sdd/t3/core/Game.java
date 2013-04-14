@@ -1,8 +1,9 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
 
 
 import java.util.ArrayList;
 import java.util.Vector;
+
 
 import android.util.Log;
 

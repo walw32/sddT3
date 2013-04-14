@@ -1,7 +1,6 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3.core;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 /**

@@ -1,8 +1,9 @@
-package edu.uco.sdd.t3.gameboard;
+package edu.uco.sdd.t3;
 
 import edu.uco.sdd.t3.R;
 import edu.uco.sdd.t3.R.layout;
 import edu.uco.sdd.t3.R.menu;
+import edu.uco.sdd.t3.core.GameplayView;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
