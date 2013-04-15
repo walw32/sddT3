@@ -37,4 +37,11 @@ public class ChangeStrategyAction extends GameAction {
 		}
 	}
 
+	@Override
+	public String toXmlString() {
+		// There is no documentation on this particular action,
+		// therefore it will return null.
+		return null;
+	}
+
 }

@@ -86,6 +86,7 @@ public class Game implements BoardObserver{
 		int boardSize = action.getBoard().getBoardSize();
 		int maxMarkers = boardSize * boardSize;
 		Log.v("Game", "Marker Count: " + markerCount + " | Max Markers: " + maxMarkers);
+		mActionHistory.add(action);
 		if (doVictoryEvaluation(action)) {
 			if (mGameState == State.PLAYER_1_TURN) {
 				notify("Game over! Player 1 wins!");
@@ -105,6 +106,7 @@ public class Game implements BoardObserver{
 			mTimer.reset();
 			mTimer.start();
 		}
+		
 	}
 	
 	/**
@@ -150,12 +152,12 @@ public class Game implements BoardObserver{
 	}
 	
 	/**
-	 * Adds a given GameAction to its history and then executes it.
+	 * Executes a given GameAction. If successful, it will add it to the 
+	 * game history.
 	 * 
 	 * @param action The GameAction to execute.
 	 */
 	public void doAction(GameAction action) {
-		mActionHistory.add(action);
 		action.execute();
 	}
 	

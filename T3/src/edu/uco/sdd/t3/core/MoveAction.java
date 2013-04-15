@@ -31,6 +31,12 @@ public class MoveAction extends GameAction {
 		getBoard().placeMarker(this);
 	}
 	
+	@Override
+	public String toXmlString() {
+		String xmlString = "<Move><x>" + mPosX + "</x><y>" + mPosY + "</y></Move>";
+		return xmlString;
+	}
+	
 	/**
 	 * @return The column coordinate of the move.
 	 */

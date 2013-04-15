@@ -2,6 +2,9 @@ package edu.uco.sdd.t3.core;
 
 // This is Jack's comment test
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -22,12 +25,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import edu.uco.sdd.t3.Cloud;
 import edu.uco.sdd.t3.R;
+import edu.uco.sdd.t3.network.NetworkGame;
+import edu.uco.sdd.t3.network.NetworkPlayer;
 
 public class GameplayView extends Activity implements GameObserver,
 		BoardObserver {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Bundle bundle = getIntent().getExtras();
@@ -70,6 +75,59 @@ public class GameplayView extends Activity implements GameObserver,
 			cloudButton.setVisibility(View.GONE);
 			nextMoveButton.setVisibility(View.GONE);
 		}
+		// Network man vs man game
+		else if (gameType == 2) {
+			boardSize = (Integer) bundle.getSerializable("gameSize");
+			switch (boardSize) {
+			case 3:
+				setContentView(R.layout.activity_gameplay_view_3x3);
+				break;
+			case 4:
+				setContentView(R.layout.activity_gameplay_view_4x4);
+				break;
+			case 5:
+				setContentView(R.layout.activity_gameplay_view_5x5);
+				break;
+			}
+			mBoard = new Board(boardSize);
+			Thread networkThread = new Thread(new Runnable() {
+				public void run() {
+					try {
+					ServerSocket serverSocket = new ServerSocket(40000);
+					Socket gameSocket = serverSocket.accept();
+					mCurrentGame = new NetworkGame(gameSocket);
+					mPlayer2 = new NetworkPlayer(gameSocket, mCurrentGame, mBoard, 2);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			});
+			networkThread.start();
+			replayBoardSize = String.valueOf(boardSize);
+			mCurrentGame.attachObserver(this);
+			TimeoutClock timer = new TimeoutClock(mHandler,
+					((Integer) bundle.getSerializable("gameTimeout") * 1000));
+			mCurrentGame.setTimer(timer);
+			timer.attachGame(mCurrentGame);
+			mBoard.attachObserver(this);
+			mBoard.attachObserver(mCurrentGame);
+			mPlayer1 = new Player(mCurrentGame, mBoard, 1);	
+			Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
+			Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
+			MarkerImage X = new MarkerImage(xImage);
+			MarkerImage O = new MarkerImage(oImage);
+			mPlayer1.setMarker(X);
+			mPlayer2.setMarker(O);
+			View cloudButton = findViewById(R.id.cloudSave);
+			View nextMoveButton = findViewById(R.id.nextMove);
+			cloudButton.setVisibility(View.GONE);
+			nextMoveButton.setVisibility(View.GONE);
+		}
+		// Network AI vs AI game
+		else if (gameType == 3) {
+			
+		}
+		
 
 		// this means it's a cloud-replay game
 		else if (gameType == 4) {

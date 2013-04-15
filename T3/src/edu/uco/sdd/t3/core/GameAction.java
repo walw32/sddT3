@@ -39,6 +39,13 @@ public abstract class GameAction {
 	public Game getGame() {
 		return mGame;
 	}
+	
+	/**
+	 * Translates the GameAction into a corresponding string with XML tags.
+	 * 
+	 * @return The corresponding string with XML tags set in the networking specification.
+	 */
+	public abstract String toXmlString();
 
 	private Game mGame;
 	private Board mBoard;

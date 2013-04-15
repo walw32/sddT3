@@ -32,13 +32,13 @@
 
     <EditText
         android1:id="@+id/hostIp"
-        android1:inputType="text"
         android1:layout_width="wrap_content"
         android1:layout_height="wrap_content"
         android1:layout_alignParentBottom="true"
         android1:layout_alignParentLeft="true"
         android1:layout_alignTop="@+id/joinGameButton"
-        android1:ems="10" />
+        android1:ems="10"
+        android1:inputType="text" />
 
     <Button
         android1:id="@+id/joinGameButton"
@@ -87,22 +87,22 @@
         android1:onClick="onMenuButtonClicked"
         android1:text="Host &amp; Play!" />
 
-    <RadioButton
-        android1:id="@+id/manVsManButton"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
+    <RadioGroup
         android1:layout_alignLeft="@+id/boardSizes"
-        android1:layout_centerVertical="true"
-        android1:text="Man vs. Man" />
+        android1:layout_centerVertical="true" >
 
-    <RadioButton
-        android1:id="@+id/aiVsAiButton"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
-        android1:layout_alignBaseline="@+id/manVsManButton"
-        android1:layout_alignBottom="@+id/manVsManButton"
-        android1:layout_alignRight="@+id/timeoutThresholds"
-        android1:text="AI vs. AI" />
+        <RadioButton
+            android1:id="@+id/manVsManButton"
+            android1:layout_width="wrap_content"
+            android1:layout_height="wrap_content"
+            android1:text="Man vs. Man" />
+
+        <RadioButton
+            android1:id="@+id/aiVsAiButton"
+            android1:layout_width="wrap_content"
+            android1:layout_height="wrap_content"
+            android1:text="AI vs. AI" />
+    </RadioGroup>
 
     <RadioButton
         android1:id="@+id/five"
