@@ -1,17 +1,14 @@
 package edu.uco.sdd.t3;
 
-import edu.uco.sdd.t3.R;
-import edu.uco.sdd.t3.R.layout;
-import edu.uco.sdd.t3.R.menu;
-import edu.uco.sdd.t3.core.GameplayView;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.KeyEvent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import edu.uco.sdd.t3.core.GameplayView;
 
 public class MainMenu extends Activity {
 	private int gameSize;
@@ -115,12 +112,17 @@ public class MainMenu extends Activity {
 
 		// host game, gameType is 2
 		case R.id.hostGameButton:
-
+			Intent serverIntent = new Intent(MainMenu.this, Server.class);
+			startActivity(serverIntent);
 			break;
 
 		// join game, gameType is 3
 		case R.id.joinGameButton:
-
+			EditText ipAddressField = (EditText) findViewById(R.id.hostIp);
+			String ipAddress = ipAddressField.getText().toString();
+			Intent clientIntent = new Intent(MainMenu.this, Client.class);
+			clientIntent.putExtra("IP", ipAddress);
+			startActivity(clientIntent);
 			break;
 
 		}

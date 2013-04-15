@@ -32,6 +32,7 @@
 
     <EditText
         android1:id="@+id/hostIp"
+        android1:inputType="text"
         android1:layout_width="wrap_content"
         android1:layout_height="wrap_content"
         android1:layout_alignParentBottom="true"
@@ -46,7 +47,7 @@
         android1:layout_alignParentBottom="true"
         android1:layout_alignParentRight="true"
         android1:layout_toRightOf="@+id/hostIp"
-        android:onClick="Start"
+        android:onClick="onMenuButtonClicked"
         android1:text="Join Game!" />
 
     <TextView
@@ -73,7 +74,8 @@
         android1:layout_height="wrap_content"
         android1:layout_above="@+id/hostGameButton"
         android1:layout_alignParentLeft="true"
-        android1:layout_centerHorizontal="true" />
+        android1:layout_centerHorizontal="true"
+        android1:text="TextView.IPText" />
 
     <Button
         android1:id="@+id/hostGameButton"
@@ -82,6 +84,7 @@
         android1:layout_above="@+id/textView3"
         android1:layout_centerHorizontal="true"
         android1:layout_marginBottom="48dp"
+        android1:onClick="onMenuButtonClicked"
         android1:text="Host &amp; Play!" />
 
     <RadioButton
