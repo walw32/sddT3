@@ -1,7 +1,10 @@
-package edu.uco.sdd.t3;
+package edu.uco.sdd.t3.network;
 
 import java.io.BufferedReader;
 import edu.uco.sdd.t3.R;
+import edu.uco.sdd.t3.R.id;
+import edu.uco.sdd.t3.R.layout;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -86,7 +89,7 @@ public class Network extends Activity {
 
 				case R.id.hostGameButton: // Host & Play button
 
-					Intent intent1 = new Intent(Network.this, Server.class);
+					Intent intent1 = new Intent(Network.this, ServerView.class);
 					startActivity(intent1);
 
 					break;
@@ -94,7 +97,7 @@ public class Network extends Activity {
 					EditText ipText = (EditText) findViewById(R.id.hostIp);
 					String ipString = ipText.getText().toString();
 
-					Intent intent2 = new Intent(Network.this, Client.class);
+					Intent intent2 = new Intent(Network.this, ClientView.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("IP", ipString);
 					intent2.putExtras(bundle);

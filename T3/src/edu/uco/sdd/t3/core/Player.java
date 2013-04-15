@@ -60,6 +60,22 @@ public class Player {
 	public void setId(int id) {
 		mPlayerId = id;		
 	}
+	
+	public Game getCurrentGame() {
+		return mCurrentGame;
+	}
+
+	public void setCurrentGame(Game mCurrentGame) {
+		this.mCurrentGame = mCurrentGame;
+	}
+
+	public Board getBoard() {
+		return mBoard;
+	}
+
+	public void setBoard(Board mBoard) {
+		this.mBoard = mBoard;
+	}
 
 	private Game mCurrentGame;
 	private Board mBoard;

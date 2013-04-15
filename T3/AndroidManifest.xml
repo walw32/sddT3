@@ -40,8 +40,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Client" />
-        <activity android:name=".Server" />
+        <activity android:name="edu.uco.sdd.t3.network.ClientView" />
+        <activity android:name="edu.uco.sdd.t3.network.ServerView" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

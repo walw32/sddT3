@@ -35,28 +35,44 @@ public class GameplayView extends Activity implements GameObserver,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// Grab data that was passed to us from the config screen.
 		Bundle bundle = getIntent().getExtras();
-		gameType = (Integer) bundle.getSerializable("gameType");
+		if (bundle != null) {
+			try {
+				gameType = (Integer) bundle.getSerializable("gameType");
+
+				boardSize = (Integer) bundle.getSerializable("gameSize");
+				timeoutThreshold = (Integer) bundle
+						.getSerializable("gameTimeout") * 1000;
+			} catch (NullPointerException ex) {
+				gameType = 0;
+				boardSize = 3;
+				timeoutThreshold = 15 * 1000;
+			}
+		} else {
+			gameType = 0;
+			boardSize = 3;
+			timeoutThreshold = 15 * 1000;
+		}
+
+		switch (boardSize) {
+		case 3:
+			setContentView(R.layout.activity_gameplay_view_3x3);
+			break;
+		case 4:
+			setContentView(R.layout.activity_gameplay_view_4x4);
+			break;
+		case 5:
+			setContentView(R.layout.activity_gameplay_view_5x5);
+			break;
+		}
 		// not a cloud-replay game, default board size (at least until we
 		// implement configuration screen)
 		if (gameType == 1) {
-			boardSize = (Integer) bundle.getSerializable("gameSize");
-			switch (boardSize) {
-			case 3:
-				setContentView(R.layout.activity_gameplay_view_3x3);
-				break;
-			case 4:
-				setContentView(R.layout.activity_gameplay_view_4x4);
-				break;
-			case 5:
-				setContentView(R.layout.activity_gameplay_view_5x5);
-				break;
-			}
 			replayBoardSize = String.valueOf(boardSize);
 			mCurrentGame = new Game();
 			mCurrentGame.attachObserver(this);
-			TimeoutClock timer = new TimeoutClock(mHandler,
-					((Integer) bundle.getSerializable("gameTimeout") * 1000));
+			TimeoutClock timer = new TimeoutClock(mHandler, timeoutThreshold);
 			mCurrentGame.setTimer(timer);
 			timer.attachGame(mCurrentGame);
 			mBoard = new Board(boardSize);
@@ -75,60 +91,16 @@ public class GameplayView extends Activity implements GameObserver,
 			cloudButton.setVisibility(View.GONE);
 			nextMoveButton.setVisibility(View.GONE);
 		}
-		// Network man vs man game
+		// Network man vs man game - Deprecated, should be using ClientView or
+		// ServerView
 		else if (gameType == 2) {
-			boardSize = (Integer) bundle.getSerializable("gameSize");
-			switch (boardSize) {
-			case 3:
-				setContentView(R.layout.activity_gameplay_view_3x3);
-				break;
-			case 4:
-				setContentView(R.layout.activity_gameplay_view_4x4);
-				break;
-			case 5:
-				setContentView(R.layout.activity_gameplay_view_5x5);
-				break;
-			}
-			mBoard = new Board(boardSize);
-			Thread networkThread = new Thread(new Runnable() {
-				public void run() {
-					try {
-					ServerSocket serverSocket = new ServerSocket(40000);
-					Socket gameSocket = serverSocket.accept();
-					mCurrentGame = new NetworkGame(gameSocket);
-					mPlayer2 = new NetworkPlayer(gameSocket, mCurrentGame, mBoard, 2);
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
-				}
-			});
-			networkThread.start();
-			replayBoardSize = String.valueOf(boardSize);
-			mCurrentGame.attachObserver(this);
-			TimeoutClock timer = new TimeoutClock(mHandler,
-					((Integer) bundle.getSerializable("gameTimeout") * 1000));
-			mCurrentGame.setTimer(timer);
-			timer.attachGame(mCurrentGame);
-			mBoard.attachObserver(this);
-			mBoard.attachObserver(mCurrentGame);
-			mPlayer1 = new Player(mCurrentGame, mBoard, 1);	
-			Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
-			Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
-			MarkerImage X = new MarkerImage(xImage);
-			MarkerImage O = new MarkerImage(oImage);
-			mPlayer1.setMarker(X);
-			mPlayer2.setMarker(O);
-			View cloudButton = findViewById(R.id.cloudSave);
-			View nextMoveButton = findViewById(R.id.nextMove);
-			cloudButton.setVisibility(View.GONE);
-			nextMoveButton.setVisibility(View.GONE);
-		}
-		// Network AI vs AI game
-		else if (gameType == 3) {
-			
-		}
-		
 
+		}
+		// Network AI vs AI game - Deprecated, should be using ClientView or
+		// ServerView
+		else if (gameType == 3) {
+
+		}
 		// this means it's a cloud-replay game
 		else if (gameType == 4) {
 			gameHistory = (String) bundle.getSerializable("history");
@@ -611,15 +583,18 @@ public class GameplayView extends Activity implements GameObserver,
 
 	// gameType will be '1' for single player, '2' for hosted-network game, '3'
 	// for joined-network game, and '4' for cloud-replay
-	private int gameType;
+
 	private int replayCounter = 0;
-	private int boardSize;
 	private String gameHistory;
 	private String saveName;
 	private String replayBoardSize;
-	private Game mCurrentGame;
-	private Board mBoard;
-	private Player mPlayer1;
-	private Player mPlayer2;
-	private Handler mHandler = new Handler();
+
+	protected int gameType;
+	protected Game mCurrentGame;
+	protected Board mBoard;
+	protected Player mPlayer1;
+	protected Player mPlayer2;
+	protected int boardSize;
+	protected int timeoutThreshold;
+	protected Handler mHandler = new Handler();
 }
