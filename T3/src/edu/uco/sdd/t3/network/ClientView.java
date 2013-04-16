@@ -6,27 +6,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
-import edu.uco.sdd.t3.R;
-import edu.uco.sdd.t3.R.id;
-import edu.uco.sdd.t3.R.layout;
-import edu.uco.sdd.t3.core.Board;
-import edu.uco.sdd.t3.core.GameplayView;
-import edu.uco.sdd.t3.core.MarkerImage;
-import edu.uco.sdd.t3.core.Player;
-import edu.uco.sdd.t3.core.TimeoutClock;
-
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import edu.uco.sdd.t3.R;
+import edu.uco.sdd.t3.core.Board;
+import edu.uco.sdd.t3.core.GameplayView;
+import edu.uco.sdd.t3.core.MarkerImage;
+import edu.uco.sdd.t3.core.Player;
+import edu.uco.sdd.t3.core.TimeoutClock;
 
 public class ClientView extends GameplayView {
 
@@ -53,7 +47,7 @@ public class ClientView extends GameplayView {
 					Log.d("ClientView", "Server IP: " + serverIp);
 					Log.d("ClientView", "Server Address: " + serverAddress);
 					Log.d("ClientView", "Server IP length = " + serverIp.length());
-					serverSocket = new Socket("172.21.28.15", 40000);
+					serverSocket = new Socket(serverAddress, 40000);
 					InputStreamReader inputStreamReader = new InputStreamReader(
 							serverSocket.getInputStream());
 					PrintWriter printWriter = new PrintWriter(serverSocket
@@ -78,14 +72,9 @@ public class ClientView extends GameplayView {
 
 					Log.d("ClientView", "Receiving game metadata...");
 					// Receiving game metadata
-					while(!serverInput.ready()) {
-						Thread.sleep(100);
-					}
-					if (serverInput.ready()) {
 					String gameMetadata = serverInput.readLine();
 					Log.d("ClientView", "Received game metadata.");
 					Log.d("ClientView", "Metadata: " + gameMetadata);
-					}
 					
 					Log.d("ClientView", "Did we receive data?");
 
@@ -127,6 +116,17 @@ public class ClientView extends GameplayView {
 					// Cloud replay button that shows at the end of the game
 					mMainThreadHandler.post(new Runnable() {
 						public void run() {
+							switch (boardSize) {
+							case 3:
+								setContentView(R.layout.activity_gameplay_view_3x3);
+								break;
+							case 4:
+								setContentView(R.layout.activity_gameplay_view_4x4);
+								break;
+							case 5:
+								setContentView(R.layout.activity_gameplay_view_5x5);
+								break;
+							}
 							View cloudButton = findViewById(R.id.cloudSave);
 							View nextMoveButton = findViewById(R.id.nextMove);
 							cloudButton.setVisibility(View.GONE);
@@ -134,8 +134,6 @@ public class ClientView extends GameplayView {
 						}
 					});
 				} catch (IOException ex) {
-					ex.printStackTrace();
-				} catch (InterruptedException ex) {
 					ex.printStackTrace();
 				}
 			}

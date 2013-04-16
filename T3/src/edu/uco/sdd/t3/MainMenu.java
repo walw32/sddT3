@@ -179,7 +179,8 @@ public class MainMenu extends Activity {
 		// join game, gameType is 3
 		case R.id.joinGameButton:
 			Intent clientIntent = new Intent(MainMenu.this, ClientView.class);
-			String serverIpAddress = getIpAddress();
+			EditText textbox = (EditText) findViewById(R.id.hostIp);
+			String serverIpAddress = textbox.getText().toString();
 			clientIntent.putExtra("IP", serverIpAddress);
 			startActivity(clientIntent);
 			break;

@@ -76,6 +76,8 @@ public class ServerView extends GameplayView {
 					String gameMetadataXml = "<Game>" + gameTypeXml
 							+ boardSizeXml + timeoutXml + "</Game>";
 					clientOutput.write(gameMetadataXml, 0, gameMetadataXml.length());
+					clientOutput.newLine();
+					clientOutput.flush();
 
 					// Dismiss the progress dialog stylishly
 					mMainThreadHandler.post(new Runnable() {
@@ -116,6 +118,17 @@ public class ServerView extends GameplayView {
 					// game
 					mMainThreadHandler.post(new Runnable() {
 						public void run() {
+							switch (boardSize) {
+							case 3:
+								setContentView(R.layout.activity_gameplay_view_3x3);
+								break;
+							case 4:
+								setContentView(R.layout.activity_gameplay_view_4x4);
+								break;
+							case 5:
+								setContentView(R.layout.activity_gameplay_view_5x5);
+								break;
+							}
 							View cloudButton = findViewById(R.id.cloudSave);
 							View nextMoveButton = findViewById(R.id.nextMove);
 							//cloudButton.setVisibility(View.GONE);

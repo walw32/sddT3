@@ -2,9 +2,6 @@ package edu.uco.sdd.t3.core;
 
 // This is Jack's comment test
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -25,8 +22,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import edu.uco.sdd.t3.Cloud;
 import edu.uco.sdd.t3.R;
-import edu.uco.sdd.t3.network.NetworkGame;
-import edu.uco.sdd.t3.network.NetworkPlayer;
 
 public class GameplayView extends Activity implements GameObserver,
 		BoardObserver {
@@ -45,12 +40,12 @@ public class GameplayView extends Activity implements GameObserver,
 				timeoutThreshold = (Integer) bundle
 						.getSerializable("gameTimeout") * 1000;
 			} catch (NullPointerException ex) {
-				gameType = 0;
+				gameType = -1;
 				boardSize = 3;
 				timeoutThreshold = 15 * 1000;
 			}
 		} else {
-			gameType = 0;
+			gameType = -2;
 			boardSize = 3;
 			timeoutThreshold = 15 * 1000;
 		}
