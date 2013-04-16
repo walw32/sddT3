@@ -40,8 +40,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="edu.uco.sdd.t3.network.ClientView" />
-        <activity android:name="edu.uco.sdd.t3.network.ServerView" />
+        <activity android:name="edu.uco.sdd.t3.network.ClientView"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden" />
+        <activity android:name="edu.uco.sdd.t3.network.ServerView"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

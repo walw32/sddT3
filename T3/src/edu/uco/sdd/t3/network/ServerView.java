@@ -24,9 +24,7 @@ import edu.uco.sdd.t3.core.MoveAction;
 import edu.uco.sdd.t3.core.Player;
 import edu.uco.sdd.t3.core.TimeoutClock;
 
-public class ServerView extends GameplayView {
-
-	
+public class ServerView extends GameplayView {	
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -134,12 +132,14 @@ public class ServerView extends GameplayView {
 					Board board = new Board(boardSize);
 					board.attachObserver(self);
 					board.attachObserver(game);
-					Player player1 = new Player(game, board, 1);
+					
 					Log.d("ServerView", "Is clientSocket null? " + (clientSocket == null));
 					Log.d("ServerView", "Is mCurrentGame null? " + (game == null));
 					Log.d("ServerView", "Is mBoard null? " + (board == null));
-					Player player2 = new NetworkPlayer(clientSocket, game,
-							board, 2);
+					// Client goes first to serve as acknowledgement
+					Player player1 = new NetworkPlayer(clientSocket, game,
+							board, 1);
+					Player player2 = new Player(game, board, 2);
 					Drawable xImage = getResources().getDrawable(
 							R.drawable.x_graphic);
 					Drawable oImage = getResources().getDrawable(
@@ -149,6 +149,7 @@ public class ServerView extends GameplayView {
 					player1.setMarker(X);
 					player2.setMarker(O);
 					self.setCurrentGame(game);
+					self.setTimer(timer);
 					self.setBoard(board);
 					self.setPlayer1(player1);
 					self.setPlayer2(player2);			
@@ -173,7 +174,7 @@ public class ServerView extends GameplayView {
 	
 	@Override
 	public boolean onButtonClicked(View v) {
-		if (getCurrentGame().getGameState() == Game.State.PLAYER_1_TURN) {
+		if (getCurrentGame().getGameState() == Game.State.PLAYER_2_TURN) {
 			// It's our turn.
 			return super.onButtonClicked(v);
 		} else {
@@ -185,7 +186,7 @@ public class ServerView extends GameplayView {
 	@Override
 	public void onMarkerPlaced(final MoveAction action) {
 		super.onMarkerPlaced(action);
-		if (getCurrentGame().getGameState() == Game.State.PLAYER_1_TURN) {
+		if (getCurrentGame().getGameState() == Game.State.PLAYER_2_TURN) {
 			// Send data to our network player.
 			sendData(action.toXmlString());
 		}

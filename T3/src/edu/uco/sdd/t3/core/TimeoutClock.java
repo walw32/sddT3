@@ -1,5 +1,6 @@
 package edu.uco.sdd.t3.core;
 
+import edu.uco.sdd.t3.R;
 import android.os.Handler;
 import android.util.Log;
 
@@ -19,6 +20,7 @@ public class TimeoutClock {
 	public TimeoutClock(Handler handler, long timeInMillis) {
 		mMainHandler = handler;
 		mTimerLength = timeInMillis;
+		mCurrentTime = mTimerLength;
 		mClock = new Thread(new ClockThread(timeInMillis));
 	}
 	
@@ -58,6 +60,10 @@ public class TimeoutClock {
 		Log.v("TimeoutClock", "Clock reset!");
 	}
 	
+	public long getCurrentTime() {
+		return mCurrentTime;
+	}
+	
 	/**
 	 * Attaches a game to the TimeoutClock, who will then
 	 * notify all of the game's observers when the time is up.
@@ -89,6 +95,7 @@ public class TimeoutClock {
 					Thread.sleep(100);	
 					currentTime = System.currentTimeMillis();
 					currentLength = mStopTime - currentTime;
+					mCurrentTime = currentLength;
 				}
 				if (mGame != null) {
 					Log.v("ClockThread", "currentLength = " + currentLength);
@@ -109,6 +116,7 @@ public class TimeoutClock {
 	
 	private Thread mClock;
 	private long mTimerLength;
+	private long mCurrentTime;
 	private Game mGame;
 	private Handler mMainHandler;
 	

@@ -61,6 +61,8 @@ public class GameplayView extends Activity implements GameObserver,
 			setContentView(R.layout.activity_gameplay_view_5x5);
 			break;
 		}
+		TextView timerText = (TextView) findViewById(R.id.timerText);
+		timerText.setText("" + timeoutThreshold / 1000 + " s.");
 		// not a cloud-replay mCurrentGame, default board size (at least until
 		// we
 		// implement configuration screen)
@@ -68,9 +70,9 @@ public class GameplayView extends Activity implements GameObserver,
 			replayBoardSize = String.valueOf(boardSize);
 			mCurrentGame = new Game();
 			mCurrentGame.attachObserver(this);
-			TimeoutClock timer = new TimeoutClock(mHandler, timeoutThreshold);
-			mCurrentGame.setTimer(timer);
-			timer.attachGame(mCurrentGame);
+			mTimer = new TimeoutClock(mHandler, timeoutThreshold);
+			mCurrentGame.setTimer(mTimer);
+			mTimer.attachGame(mCurrentGame);
 			mBoard = new Board(boardSize);
 			mBoard.attachObserver(this);
 			mBoard.attachObserver(mCurrentGame);
@@ -133,6 +135,12 @@ public class GameplayView extends Activity implements GameObserver,
 			cloudReplay();
 		}
 
+		clockThread.start();
+	}
+
+	public void onStop() {
+		clockThread.interrupt();
+		super.onStop();
 	}
 
 	@Override
@@ -462,6 +470,9 @@ public class GameplayView extends Activity implements GameObserver,
 			public void run() {
 				TextView gameMessage = (TextView) findViewById(R.id.victoryText);
 				gameMessage.setText(message);
+				clockThread.interrupt();
+				TextView clock = (TextView) findViewById(R.id.timerText);
+				clock.setVisibility(View.GONE);
 
 				// set button for cloud save visible
 
@@ -595,6 +606,10 @@ public class GameplayView extends Activity implements GameObserver,
 		mCurrentGame = currentGame;
 	}
 
+	public void setTimer(TimeoutClock clock) {
+		mTimer = clock;
+	}
+
 	public void setBoard(Board board) {
 		mBoard = board;
 	}
@@ -620,7 +635,34 @@ public class GameplayView extends Activity implements GameObserver,
 	private Board mBoard;
 	private Player mPlayer1;
 	private Player mPlayer2;
+	private TimeoutClock mTimer;
 	private int boardSize;
 	private int timeoutThreshold;
 	private Handler mHandler = new Handler();
+	private Thread clockThread = new Thread(new Runnable() {
+		public void run() {
+			try {
+				while (true) {
+					if (mTimer == null) {
+						break;
+					}
+					mHandler.post(new Runnable() {
+						public void run() {
+							String text = Math.round(mTimer.getCurrentTime() / 1000.0) + "s.";
+							TextView timerText = (TextView) findViewById(R.id.timerText);
+							// If our timer isn't visible on the screen,
+							// let's make it visible.
+							if (!timerText.isShown()) {
+								timerText.setVisibility(View.VISIBLE);
+							}
+							timerText.setText(text);
+						}
+					});
+					Thread.sleep(100);
+				}
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
+	});
 }

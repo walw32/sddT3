@@ -120,9 +120,10 @@ public class ClientView extends GameplayView {
 					Log.d("ServerView", "Is mCurrentGame null? "
 							+ (game == null));
 					Log.d("ServerView", "Is mBoard null? " + (board == null));
-					Player player1 = new NetworkPlayer(serverSocket, game,
-							board, 1);
-					Player player2 = new Player(game, board, 2);
+					// We will be sending data to host as an acknowledgement.
+					Player player1 = new Player(game, board, 1);
+					Player player2 = new NetworkPlayer(serverSocket, game,
+							board, 2);
 					Drawable xImage = getResources().getDrawable(
 							R.drawable.x_graphic);
 					Drawable oImage = getResources().getDrawable(
@@ -135,6 +136,7 @@ public class ClientView extends GameplayView {
 					self.setBoard(board);
 					self.setPlayer1(player1);
 					self.setPlayer2(player2);
+					self.setTimer(timer);
 
 					// Cloud replay button that shows at the end of the game
 					mMainThreadHandler.post(new Runnable() {
@@ -166,7 +168,7 @@ public class ClientView extends GameplayView {
 
 	@Override
 	public boolean onButtonClicked(View v) {
-		if (getCurrentGame().getGameState() == Game.State.PLAYER_2_TURN) {
+		if (getCurrentGame().getGameState() == Game.State.PLAYER_1_TURN) {
 			// It's our turn.
 			return super.onButtonClicked(v);
 		} else {
@@ -177,7 +179,7 @@ public class ClientView extends GameplayView {
 	@Override
 	public void onMarkerPlaced(final MoveAction action) {
 		super.onMarkerPlaced(action);
-		if (getCurrentGame().getGameState() == Game.State.PLAYER_2_TURN) {
+		if (getCurrentGame().getGameState() == Game.State.PLAYER_1_TURN) {
 			// Send data to the hosting player.
 			sendData(action.toXmlString());
 		}
