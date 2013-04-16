@@ -16,7 +16,7 @@ import edu.uco.sdd.t3.network.ClientView;
 import edu.uco.sdd.t3.network.ServerView;
 
 public class MainMenu extends Activity {
-	private int gameSize;
+	private int gameSize = 3;
 	private int gameType = 0;
 	private int threshold = 15;
 

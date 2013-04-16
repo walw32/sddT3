@@ -9,6 +9,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,20 +19,14 @@ import android.util.Log;
 import android.view.View;
 import edu.uco.sdd.t3.R;
 import edu.uco.sdd.t3.core.Board;
+import edu.uco.sdd.t3.core.Game;
 import edu.uco.sdd.t3.core.GameplayView;
 import edu.uco.sdd.t3.core.MarkerImage;
+import edu.uco.sdd.t3.core.MoveAction;
 import edu.uco.sdd.t3.core.Player;
 import edu.uco.sdd.t3.core.TimeoutClock;
 
 public class ClientView extends GameplayView {
-
-	private ClientView self = this;
-	private Socket serverSocket;
-	private BufferedReader serverInput;
-	private BufferedWriter serverOutput;
-	private ProgressDialog progressDialog;
-	private String serverIp;
-	private Handler mMainThreadHandler = new Handler();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +42,8 @@ public class ClientView extends GameplayView {
 					InetAddress serverAddress = InetAddress.getByName(serverIp);
 					Log.d("ClientView", "Server IP: " + serverIp);
 					Log.d("ClientView", "Server Address: " + serverAddress);
-					Log.d("ClientView", "Server IP length = " + serverIp.length());
+					Log.d("ClientView",
+							"Server IP length = " + serverIp.length());
 					serverSocket = new Socket(serverAddress, 40000);
 					InputStreamReader inputStreamReader = new InputStreamReader(
 							serverSocket.getInputStream());
@@ -72,10 +69,27 @@ public class ClientView extends GameplayView {
 
 					Log.d("ClientView", "Receiving game metadata...");
 					// Receiving game metadata
-					String gameMetadata = serverInput.readLine();
+					String gameMetadataStr = serverInput.readLine();
+					NetworkParser parser = new NetworkParser();
+					GameMetadata data = null;
+					try {
+						data = parser.parseGameData(gameMetadataStr);
+					} catch (XmlPullParserException e1) {
+						Log.d("NetworkPlayer", "Malformed XML!");
+						e1.printStackTrace();
+					}
 					Log.d("ClientView", "Received game metadata.");
-					Log.d("ClientView", "Metadata: " + gameMetadata);
-					
+					Log.d("ClientView", "Metadata String: " + gameMetadataStr);
+					if (data != null) {
+						Log.d("ClientView", data.toString());
+						gameType = data.getGameType();
+						boardSize = data.getBoardSize();
+						timeoutThreshold = data.getTimeoutLength();
+					} else {
+						gameType = 0;
+						boardSize = 3;
+						timeoutThreshold = 15;
+					}
 					Log.d("ClientView", "Did we receive data?");
 
 					// Dismiss the progress dialog stylishly
@@ -92,26 +106,35 @@ public class ClientView extends GameplayView {
 					});
 
 					// Set up the game
-					mCurrentGame = new NetworkGame(serverSocket);
-					mCurrentGame.attachObserver(self);
-					TimeoutClock timer = new TimeoutClock(mHandler,
+					Game game = new Game();
+					game.attachObserver(self);
+					TimeoutClock timer = new TimeoutClock(mMainThreadHandler,
 							timeoutThreshold);
-					mCurrentGame.setTimer(timer);
-					timer.attachGame(mCurrentGame);
-					mBoard = new Board(boardSize);
-					mBoard.attachObserver(self);
-					mBoard.attachObserver(mCurrentGame);
-					mPlayer1 = new NetworkPlayer(serverSocket, mCurrentGame,
-							mBoard, 2);
-					mPlayer2 = new Player(mCurrentGame, mBoard, 1);
+					game.setTimer(timer);
+					timer.attachGame(game);
+					Board board = new Board(boardSize);
+					board.attachObserver(self);
+					board.attachObserver(game);
+					Log.d("ServerView", "Is clientSocket null? "
+							+ (serverSocket == null));
+					Log.d("ServerView", "Is mCurrentGame null? "
+							+ (game == null));
+					Log.d("ServerView", "Is mBoard null? " + (board == null));
+					Player player1 = new NetworkPlayer(serverSocket, game,
+							board, 1);
+					Player player2 = new Player(game, board, 2);
 					Drawable xImage = getResources().getDrawable(
 							R.drawable.x_graphic);
 					Drawable oImage = getResources().getDrawable(
 							R.drawable.o_graphic);
 					MarkerImage X = new MarkerImage(xImage);
 					MarkerImage O = new MarkerImage(oImage);
-					mPlayer1.setMarker(X);
-					mPlayer2.setMarker(O);
+					player1.setMarker(X);
+					player2.setMarker(O);
+					self.setCurrentGame(game);
+					self.setBoard(board);
+					self.setPlayer1(player1);
+					self.setPlayer2(player2);
 
 					// Cloud replay button that shows at the end of the game
 					mMainThreadHandler.post(new Runnable() {
@@ -139,7 +162,42 @@ public class ClientView extends GameplayView {
 			}
 		});
 		networkThread.start();
+	}
 
+	@Override
+	public boolean onButtonClicked(View v) {
+		if (getCurrentGame().getGameState() == Game.State.PLAYER_2_TURN) {
+			// It's our turn.
+			return super.onButtonClicked(v);
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public void onMarkerPlaced(final MoveAction action) {
+		super.onMarkerPlaced(action);
+		if (getCurrentGame().getGameState() == Game.State.PLAYER_2_TURN) {
+			// Send data to the hosting player.
+			sendData(action.toXmlString());
+		}
+	}
+	
+	private synchronized void sendData(final String data) {
+		Thread networkThread = new Thread(new Runnable() {
+			public void run() {
+				try {
+					Log.d("NetworkGame", "Sending data: " + data);
+					serverOutput.write(data);
+					serverOutput.newLine();
+					serverOutput.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		networkThread.start();
 	}
 
 	@Override
@@ -155,6 +213,16 @@ public class ClientView extends GameplayView {
 		}
 		super.onStop();
 	}
-	
-	private NetworkGame mCurrentGame;
+
+	private int boardSize;
+	private int timeoutThreshold;
+	private int gameType;
+
+	private ClientView self = this;
+	private Socket serverSocket;
+	private BufferedReader serverInput;
+	private BufferedWriter serverOutput;
+	private ProgressDialog progressDialog;
+	private String serverIp;
+	private Handler mMainThreadHandler = new Handler();
 }

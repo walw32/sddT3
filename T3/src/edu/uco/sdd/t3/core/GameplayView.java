@@ -61,7 +61,8 @@ public class GameplayView extends Activity implements GameObserver,
 			setContentView(R.layout.activity_gameplay_view_5x5);
 			break;
 		}
-		// not a cloud-replay game, default board size (at least until we
+		// not a cloud-replay mCurrentGame, default board size (at least until
+		// we
 		// implement configuration screen)
 		if (gameType == 1) {
 			replayBoardSize = String.valueOf(boardSize);
@@ -86,17 +87,19 @@ public class GameplayView extends Activity implements GameObserver,
 			cloudButton.setVisibility(View.GONE);
 			nextMoveButton.setVisibility(View.GONE);
 		}
-		// Network man vs man game - Deprecated, should be using ClientView or
+		// Network man vs man mCurrentGame - Deprecated, should be using
+		// ClientView or
 		// ServerView
 		else if (gameType == 2) {
 
 		}
-		// Network AI vs AI game - Deprecated, should be using ClientView or
+		// Network AI vs AI mCurrentGame - Deprecated, should be using
+		// ClientView or
 		// ServerView
 		else if (gameType == 3) {
 
 		}
-		// this means it's a cloud-replay game
+		// this means it's a cloud-replay mCurrentGame
 		else if (gameType == 4) {
 			gameHistory = (String) bundle.getSerializable("history");
 			replayBoardSize = (String) bundle.getSerializable("boardSize");
@@ -273,19 +276,25 @@ public class GameplayView extends Activity implements GameObserver,
 	}
 
 	@Override
-	public void onMarkerPlaced(MoveAction action) {
-		MarkerImage markerToPlace;
-		int playerId = action.getPlayerId();
-		if (playerId == mPlayer1.getId()) {
-			markerToPlace = mPlayer1.getMarker();
-		} else {
-			markerToPlace = mPlayer2.getMarker();
-		}
-		Drawable markerImage = markerToPlace.getDrawable();
-		int row = action.getX();
-		int column = action.getY();
-		ImageButton imageToUpdate = getImageButtonAtLocation(row, column);
-		imageToUpdate.setImageDrawable(markerImage);
+	public void onMarkerPlaced(final MoveAction action) {
+		mHandler.post(new Runnable() {
+			public void run() {
+
+				MarkerImage markerToPlace;
+				int playerId = action.getPlayerId();
+				if (playerId == mPlayer1.getId()) {
+					markerToPlace = mPlayer1.getMarker();
+				} else {
+					markerToPlace = mPlayer2.getMarker();
+				}
+				Drawable markerImage = markerToPlace.getDrawable();
+				int row = action.getX();
+				int column = action.getY();
+				ImageButton imageToUpdate = getImageButtonAtLocation(row,
+						column);
+				imageToUpdate.setImageDrawable(markerImage);
+			}
+		});
 	}
 
 	private ImageButton getImageButtonAtLocation(int row, int column) {
@@ -372,7 +381,7 @@ public class GameplayView extends Activity implements GameObserver,
 			// Prepare the list dialog box
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			// Set its title
-			builder.setTitle("Pick a game mode");
+			builder.setTitle("Pick a mCurrentGame mode");
 			// Set the list items and assign with the click listener
 			builder.setItems(items, new DialogInterface.OnClickListener() {
 				// Click listener
@@ -448,17 +457,20 @@ public class GameplayView extends Activity implements GameObserver,
 	}
 
 	@Override
-	public void onGameOver(String message) {
-		TextView gameMessage = (TextView) findViewById(R.id.victoryText);
-		gameMessage.setText(message);
+	public void onGameOver(final String message) {
+		mHandler.post(new Runnable() {
+			public void run() {
+				TextView gameMessage = (TextView) findViewById(R.id.victoryText);
+				gameMessage.setText(message);
 
-		// set button for cloud save visible
+				// set button for cloud save visible
 
-		View cloudButton = findViewById(R.id.cloudSave);
-		View nextMoveButton = findViewById(R.id.nextMove);
-		cloudButton.setVisibility(View.VISIBLE);
-		nextMoveButton.setVisibility(View.GONE);
-
+				View cloudButton = findViewById(R.id.cloudSave);
+				View nextMoveButton = findViewById(R.id.nextMove);
+				cloudButton.setVisibility(View.VISIBLE);
+				nextMoveButton.setVisibility(View.GONE);
+			}
+		});
 	}
 
 	/*
@@ -573,23 +585,42 @@ public class GameplayView extends Activity implements GameObserver,
 			// TODO Auto-generated method stub
 
 		}
-
 	}
 
-	// gameType will be '1' for single player, '2' for hosted-network game, '3'
-	// for joined-network game, and '4' for cloud-replay
+	public Game getCurrentGame() {
+		return mCurrentGame;
+	}
+
+	public void setCurrentGame(Game currentGame) {
+		mCurrentGame = currentGame;
+	}
+
+	public void setBoard(Board board) {
+		mBoard = board;
+	}
+
+	public void setPlayer1(Player player) {
+		mPlayer1 = player;
+	}
+
+	public void setPlayer2(Player player) {
+		mPlayer2 = player;
+	}
 
 	private int replayCounter = 0;
 	private String gameHistory;
 	private String saveName;
 	private String replayBoardSize;
 
-	protected int gameType;
-	protected Game mCurrentGame;
-	protected Board mBoard;
-	protected Player mPlayer1;
-	protected Player mPlayer2;
-	protected int boardSize;
-	protected int timeoutThreshold;
-	protected Handler mHandler = new Handler();
+	// gameType will be '1' for single player, '2' for hosted-network
+	// mCurrentGame, '3'
+	// for joined-network mCurrentGame, and '4' for cloud-replay
+	private int gameType;
+	private Game mCurrentGame;
+	private Board mBoard;
+	private Player mPlayer1;
+	private Player mPlayer2;
+	private int boardSize;
+	private int timeoutThreshold;
+	private Handler mHandler = new Handler();
 }
