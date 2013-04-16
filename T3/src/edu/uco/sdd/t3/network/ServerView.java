@@ -32,15 +32,15 @@ public class ServerView extends GameplayView {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.multiplayer_game_configuration);
 
 		try {
 			serverSocket = new ServerSocket(40000); // ServerView socket
 		} catch (IOException e) {
 			System.out.println("Could not listen on port: 40000");
 		}
-	
-		progressDialog = ProgressDialog.show(this, null, "Awaiting Connection...", true);
+
+		progressDialog = ProgressDialog.show(this, null,
+				"Awaiting Connection...", true);
 		Thread networkThread = new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -48,43 +48,48 @@ public class ServerView extends GameplayView {
 					clientSocket = serverSocket.accept();
 					InputStreamReader inputStreamReader = new InputStreamReader(
 							clientSocket.getInputStream());
-					PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+					PrintWriter printWriter = new PrintWriter(
+							clientSocket.getOutputStream(), true);
 					clientInput = new BufferedReader(inputStreamReader);
 					clientOutput = new BufferedWriter(printWriter);
-					
+
 					// Updating progress dialog
 					mMainThreadHandler.post(new Runnable() {
 						public void run() {
-							progressDialog.setMessage("Connection established!");
+							progressDialog
+									.setMessage("Connection established!");
 							try {
-								wait(250);
+								Thread.sleep(250);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
-							progressDialog.setMessage("Sending game information...");
+							progressDialog
+									.setMessage("Sending game information...");
 						}
 					});
-					
+
 					// Sending game metadata
 					String gameTypeXml = "<Type>" + 0 + "</Type>";
 					String boardSizeXml = "<Size>" + boardSize + "</Size>";
-					String timeoutXml = "<Timeout>" + timeoutThreshold + "</Timeout>";
-					String gameMetadataXml = "<Game>" + gameTypeXml + boardSizeXml + timeoutXml + "</Game>";
-					clientOutput.write(gameMetadataXml);
-					
+					String timeoutXml = "<Timeout>" + timeoutThreshold
+							+ "</Timeout>";
+					String gameMetadataXml = "<Game>" + gameTypeXml
+							+ boardSizeXml + timeoutXml + "</Game>";
+					clientOutput.write(gameMetadataXml, 0, gameMetadataXml.length());
+
 					// Dismiss the progress dialog stylishly
 					mMainThreadHandler.post(new Runnable() {
 						public void run() {
 							progressDialog.setMessage("Starting game...");
 							try {
-								wait(250);
+								Thread.sleep(250);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
 							progressDialog.dismiss();
 						}
 					});
-					
+
 					// Set up the game
 					mCurrentGame = new NetworkGame(clientSocket);
 					mCurrentGame.attachObserver(self);
@@ -96,30 +101,38 @@ public class ServerView extends GameplayView {
 					mBoard.attachObserver(self);
 					mBoard.attachObserver(mCurrentGame);
 					mPlayer1 = new Player(mCurrentGame, mBoard, 1);
-					mPlayer2 = new NetworkPlayer(clientSocket, mCurrentGame, mBoard, 2);
-					Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
-					Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
+					mPlayer2 = new NetworkPlayer(clientSocket, mCurrentGame,
+							mBoard, 2);
+					Drawable xImage = getResources().getDrawable(
+							R.drawable.x_graphic);
+					Drawable oImage = getResources().getDrawable(
+							R.drawable.o_graphic);
 					MarkerImage X = new MarkerImage(xImage);
 					MarkerImage O = new MarkerImage(oImage);
 					mPlayer1.setMarker(X);
 					mPlayer2.setMarker(O);
-					
-					// Cloud replay button that shows at the end of the game
-					View cloudButton = findViewById(R.id.cloudSave);
-					View nextMoveButton = findViewById(R.id.nextMove);
-					cloudButton.setVisibility(View.GONE);
-					nextMoveButton.setVisibility(View.GONE);
+
+					// Cloud replay button that shows at the end of the
+					// game
+					mMainThreadHandler.post(new Runnable() {
+						public void run() {
+							View cloudButton = findViewById(R.id.cloudSave);
+							View nextMoveButton = findViewById(R.id.nextMove);
+							//cloudButton.setVisibility(View.GONE);
+							//nextMoveButton.setVisibility(View.GONE);
+						}
+					});
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
 			}
 		});
-		networkThread.start();	
+		networkThread.start();
 	}
 
 	public void onStop() {
 		if (progressDialog != null) {
-		  progressDialog.dismiss();
+			progressDialog.dismiss();
 		}
 		try {
 			serverSocket.close();

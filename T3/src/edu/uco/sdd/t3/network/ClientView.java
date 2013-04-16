@@ -41,52 +41,67 @@ public class ClientView extends GameplayView {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.multiplayer_game_configuration);
 
-		serverIp = getIntent().getExtras().getString("IP");		
-		progressDialog = ProgressDialog.show(this, null, "Establishing Connection...", true);
+		serverIp = getIntent().getExtras().getString("IP");
+		progressDialog = ProgressDialog.show(this, null,
+				"Establishing Connection...", true);
 		Thread networkThread = new Thread(new Runnable() {
 			public void run() {
 				try {
 					// Establishing a network connection
 					InetAddress serverAddress = InetAddress.getByName(serverIp);
+					Log.d("ClientView", "Server IP: " + serverIp);
 					Log.d("ClientView", "Server Address: " + serverAddress);
-					serverSocket = new Socket(serverAddress, 40000);
+					Log.d("ClientView", "Server IP length = " + serverIp.length());
+					serverSocket = new Socket("172.21.28.15", 40000);
 					InputStreamReader inputStreamReader = new InputStreamReader(
 							serverSocket.getInputStream());
-					PrintWriter printWriter = new PrintWriter(serverSocket.getOutputStream(), true);
+					PrintWriter printWriter = new PrintWriter(serverSocket
+							.getOutputStream(), true);
 					serverInput = new BufferedReader(inputStreamReader);
 					serverOutput = new BufferedWriter(printWriter);
-					
+
 					// Updating progress dialog
 					mMainThreadHandler.post(new Runnable() {
 						public void run() {
-							progressDialog.setMessage("Connection established!");
+							progressDialog
+									.setMessage("Connection established!");
 							try {
-								wait(250);
+								Thread.sleep(250);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
-							progressDialog.setMessage("Receiving game information...");
+							progressDialog
+									.setMessage("Receiving game information...");
 						}
 					});
-					
-					// Sending game metadata
+
+					Log.d("ClientView", "Receiving game metadata...");
+					// Receiving game metadata
+					while(!serverInput.ready()) {
+						Thread.sleep(100);
+					}
+					if (serverInput.ready()) {
 					String gameMetadata = serverInput.readLine();
+					Log.d("ClientView", "Received game metadata.");
+					Log.d("ClientView", "Metadata: " + gameMetadata);
+					}
 					
+					Log.d("ClientView", "Did we receive data?");
+
 					// Dismiss the progress dialog stylishly
 					mMainThreadHandler.post(new Runnable() {
 						public void run() {
 							progressDialog.setMessage("Starting game...");
 							try {
-								wait(250);
+								Thread.sleep(250);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
 							progressDialog.dismiss();
 						}
 					});
-					
+
 					// Set up the game
 					mCurrentGame = new NetworkGame(serverSocket);
 					mCurrentGame.attachObserver(self);
@@ -97,29 +112,38 @@ public class ClientView extends GameplayView {
 					mBoard = new Board(boardSize);
 					mBoard.attachObserver(self);
 					mBoard.attachObserver(mCurrentGame);
-					mPlayer1 = new NetworkPlayer(serverSocket, mCurrentGame, mBoard, 2);
+					mPlayer1 = new NetworkPlayer(serverSocket, mCurrentGame,
+							mBoard, 2);
 					mPlayer2 = new Player(mCurrentGame, mBoard, 1);
-					Drawable xImage = getResources().getDrawable(R.drawable.x_graphic);
-					Drawable oImage = getResources().getDrawable(R.drawable.o_graphic);
+					Drawable xImage = getResources().getDrawable(
+							R.drawable.x_graphic);
+					Drawable oImage = getResources().getDrawable(
+							R.drawable.o_graphic);
 					MarkerImage X = new MarkerImage(xImage);
 					MarkerImage O = new MarkerImage(oImage);
 					mPlayer1.setMarker(X);
 					mPlayer2.setMarker(O);
-					
+
 					// Cloud replay button that shows at the end of the game
-					View cloudButton = findViewById(R.id.cloudSave);
-					View nextMoveButton = findViewById(R.id.nextMove);
-					cloudButton.setVisibility(View.GONE);
-					nextMoveButton.setVisibility(View.GONE);
+					mMainThreadHandler.post(new Runnable() {
+						public void run() {
+							View cloudButton = findViewById(R.id.cloudSave);
+							View nextMoveButton = findViewById(R.id.nextMove);
+							cloudButton.setVisibility(View.GONE);
+							nextMoveButton.setVisibility(View.GONE);
+						}
+					});
 				} catch (IOException ex) {
+					ex.printStackTrace();
+				} catch (InterruptedException ex) {
 					ex.printStackTrace();
 				}
 			}
 		});
 		networkThread.start();
-		
+
 	}
-	
+
 	@Override
 	public void onStop() {
 		// Close the ClientView Socket connection here.
@@ -133,4 +157,6 @@ public class ClientView extends GameplayView {
 		}
 		super.onStop();
 	}
+	
+	private NetworkGame mCurrentGame;
 }
