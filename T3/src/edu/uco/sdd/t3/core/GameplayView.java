@@ -40,7 +40,9 @@ public class GameplayView extends Activity implements GameObserver,
 				timeoutThreshold = (Integer) bundle
 						.getSerializable("gameTimeout") * 1000;
 			} catch (NullPointerException ex) {
-				gameType = -1;
+				Log.d("GameplayView", "Null pointer exception caught!");
+				ex.printStackTrace();
+				//gameType = -1;
 				boardSize = 3;
 				timeoutThreshold = 15 * 1000;
 			}
@@ -49,6 +51,8 @@ public class GameplayView extends Activity implements GameObserver,
 			boardSize = 3;
 			timeoutThreshold = 15 * 1000;
 		}
+		
+		Log.d("GameplayView", "GameType = " + gameType);
 
 		switch (boardSize) {
 		case 3:
@@ -88,18 +92,19 @@ public class GameplayView extends Activity implements GameObserver,
 			View nextMoveButton = findViewById(R.id.nextMove);
 			cloudButton.setVisibility(View.GONE);
 			nextMoveButton.setVisibility(View.GONE);
+			clockThread.start();
 		}
 		// Network man vs man mCurrentGame - Deprecated, should be using
 		// ClientView or
 		// ServerView
 		else if (gameType == 2) {
-
+			clockThread.start();
 		}
 		// Network AI vs AI mCurrentGame - Deprecated, should be using
 		// ClientView or
 		// ServerView
 		else if (gameType == 3) {
-
+			clockThread.start();
 		}
 		// this means it's a cloud-replay mCurrentGame
 		else if (gameType == 4) {
@@ -134,8 +139,6 @@ public class GameplayView extends Activity implements GameObserver,
 			nextMoveButton.setVisibility(View.GONE);
 			cloudReplay();
 		}
-
-		clockThread.start();
 	}
 
 	public void onStop() {
@@ -546,6 +549,10 @@ public class GameplayView extends Activity implements GameObserver,
 		@Override
 		protected String doInBackground(String... arg0) {
 			// if there are still moves to be replayed
+			Log.d("CloudThread", "Is gameHistory null? " + (gameHistory == null));
+			if (gameHistory != null) {
+			  Log.d("CloudThread", "gameHistory = " + gameHistory);
+			}
 			if (replayCounter < gameHistory.length() - 2) {
 
 				String temp = gameHistory.substring(replayCounter,
