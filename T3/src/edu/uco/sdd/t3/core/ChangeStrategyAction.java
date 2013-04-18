@@ -27,14 +27,16 @@ public class ChangeStrategyAction extends GameAction {
 	 * Executes this action.
 	 */
 	@Override
-	public void execute() {
+	public boolean execute() {
 		Board gameBoard = getBoard();
 		Game game = getGame();
+		// If we're in the sudden death game mode, start sliding the markers.
 		if (game.getGameMode() == Mode.SUDDEN_DEATH) {
 			gameBoard.setPlaceMarkerStrategy(new SlideExistingMarker(gameBoard));
 		} else {
 			gameBoard.setPlaceMarkerStrategy(new PlaceMarkerDirectly(gameBoard));
 		}
+		return true;
 	}
 
 	@Override

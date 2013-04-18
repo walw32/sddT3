@@ -13,6 +13,7 @@ import android.util.Log;
  */
 public class PlaceMarkerDirectly implements MarkerPlacementStrategy {
 
+	private static final String TAG = "PlaceMarkerDirectly";
 	private Board mGameBoard;
 	
 	public PlaceMarkerDirectly(Board gameBoard) {
@@ -33,6 +34,11 @@ public class PlaceMarkerDirectly implements MarkerPlacementStrategy {
 			rowVector.set(column, playerId); // board[row][column] = playerId;
 			return true;
 		}
+	}
+
+	@Override
+	public String getTag() {
+		return TAG;
 	}
 
 }

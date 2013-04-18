@@ -91,14 +91,12 @@ public class TimeoutClock {
 				long currentLength = mStopTime - currentTime;
 				Log.v("ClockThread", "currentLength = " + currentLength);
 				while (currentLength > 0) {
-					Log.v("ClockThread", "currentLength = " + currentLength);
 					Thread.sleep(100);	
 					currentTime = System.currentTimeMillis();
 					currentLength = mStopTime - currentTime;
 					mCurrentTime = currentLength;
 				}
 				if (mGame != null) {
-					Log.v("ClockThread", "currentLength = " + currentLength);
 					mMainHandler.post(new Runnable() {
 						public void run() {
 							mGame.timeExhausted();

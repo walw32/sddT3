@@ -27,8 +27,8 @@ public class MoveAction extends GameAction {
 	}
 	
 	@Override
-	public void execute() {
-		getBoard().placeMarker(this);
+	public boolean execute() {
+		return getBoard().placeMarker(this);
 	}
 	
 	@Override

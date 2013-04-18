@@ -16,4 +16,11 @@ public interface MarkerPlacementStrategy {
 	 * 		   false otherwise.
 	 */
 	public boolean placeMarker(MoveAction coord);
+	
+	/**
+	 * Returns a string that uniquely identifies a MarkerPlacementStrategy.
+	 * 
+	 * @return A string identifying the given MarkerPlacementStrategy.
+	 */
+	public String getTag();
 }

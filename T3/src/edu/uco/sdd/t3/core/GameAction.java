@@ -24,7 +24,7 @@ public abstract class GameAction {
 	/**
 	 * Executes the action.
 	 */
-	public abstract void execute();
+	public abstract boolean execute();
 	
 	/**
 	 * @return The game board associated with this action.

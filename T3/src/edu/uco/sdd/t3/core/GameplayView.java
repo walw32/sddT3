@@ -42,7 +42,7 @@ public class GameplayView extends Activity implements GameObserver,
 			} catch (NullPointerException ex) {
 				Log.d("GameplayView", "Null pointer exception caught!");
 				ex.printStackTrace();
-				//gameType = -1;
+				// gameType = -1;
 				boardSize = 3;
 				timeoutThreshold = 15 * 1000;
 			}
@@ -51,7 +51,7 @@ public class GameplayView extends Activity implements GameObserver,
 			boardSize = 3;
 			timeoutThreshold = 15 * 1000;
 		}
-		
+
 		Log.d("GameplayView", "GameType = " + gameType);
 
 		switch (boardSize) {
@@ -72,7 +72,7 @@ public class GameplayView extends Activity implements GameObserver,
 		// implement configuration screen)
 		if (gameType == 1) {
 			replayBoardSize = String.valueOf(boardSize);
-			mCurrentGame = new Game();
+			mCurrentGame = new Game(Game.Mode.NORMAL);
 			mCurrentGame.attachObserver(this);
 			mTimer = new TimeoutClock(mHandler, timeoutThreshold);
 			mCurrentGame.setTimer(mTimer);
@@ -288,25 +288,43 @@ public class GameplayView extends Activity implements GameObserver,
 
 	@Override
 	public void onMarkerPlaced(final MoveAction action) {
-		mHandler.post(new Runnable() {
-			public void run() {
-
-				MarkerImage markerToPlace;
-				int playerId = action.getPlayerId();
-				if (playerId == mPlayer1.getId()) {
-					markerToPlace = mPlayer1.getMarker();
-				} else {
-					markerToPlace = mPlayer2.getMarker();
-				}
-				Drawable markerImage = markerToPlace.getDrawable();
-				int row = action.getX();
-				int column = action.getY();
-				ImageButton imageToUpdate = getImageButtonAtLocation(row,
-						column);
-				imageToUpdate.setImageDrawable(markerImage);
-			}
-		});
+		MarkerImage markerToPlace;
+		int playerId = action.getPlayerId();
+		if (playerId == mPlayer1.getId()) {
+			markerToPlace = mPlayer1.getMarker();
+		} else {
+			markerToPlace = mPlayer2.getMarker();
+		}
+		final Drawable MARKER_IMAGE = markerToPlace.getDrawable();
+		final int ROW = action.getX();
+		final int COLUMN = action.getY();
+		// mHandler.post(new Runnable() {
+		// public void run() {
+		if (mBoard.getPlaceMarkerStrategy().getTag()
+				.equals("SlideExistingMarker")) {
+			Drawable blankImage = getResources().getDrawable(
+					R.drawable.blank_graphic);
+			SlideExistingMarker strategy = (SlideExistingMarker) mBoard
+					.getPlaceMarkerStrategy();
+			ImageButton imageToUpdate = getImageButtonAtLocation(
+					strategy.getPreviousOpenSpotRow(),
+					strategy.getPreviousOpenSpotCol());
+			ImageButton imageToErase = getImageButtonAtLocation(ROW, COLUMN);
+			Log.d("GameplayView",
+					"Updating image at (" + strategy.getPreviousOpenSpotRow()
+							+ "," + strategy.getPreviousOpenSpotCol() + ")");
+			Log.d("GameplayView", "Erasing image at (" + ROW + "," + COLUMN
+					+ ")");
+			imageToUpdate.setImageDrawable(MARKER_IMAGE);
+			imageToErase.setImageDrawable(blankImage);
+		} else {
+			ImageButton imageToUpdate = getImageButtonAtLocation(ROW, COLUMN);
+			imageToUpdate.setImageDrawable(MARKER_IMAGE);
+		}
 	}
+
+	// });
+	// }
 
 	private ImageButton getImageButtonAtLocation(int row, int column) {
 		ImageButton buttonToReturn = null;
@@ -549,9 +567,10 @@ public class GameplayView extends Activity implements GameObserver,
 		@Override
 		protected String doInBackground(String... arg0) {
 			// if there are still moves to be replayed
-			Log.d("CloudThread", "Is gameHistory null? " + (gameHistory == null));
+			Log.d("CloudThread", "Is gameHistory null? "
+					+ (gameHistory == null));
 			if (gameHistory != null) {
-			  Log.d("CloudThread", "gameHistory = " + gameHistory);
+				Log.d("CloudThread", "gameHistory = " + gameHistory);
 			}
 			if (replayCounter < gameHistory.length() - 2) {
 
@@ -655,7 +674,8 @@ public class GameplayView extends Activity implements GameObserver,
 					}
 					mHandler.post(new Runnable() {
 						public void run() {
-							String text = Math.round(mTimer.getCurrentTime() / 1000.0) + "s.";
+							String text = Math.round(mTimer.getCurrentTime() / 1000.0)
+									+ "s.";
 							TextView timerText = (TextView) findViewById(R.id.timerText);
 							// If our timer isn't visible on the screen,
 							// let's make it visible.
