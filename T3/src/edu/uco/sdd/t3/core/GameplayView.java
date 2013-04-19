@@ -326,7 +326,7 @@ public class GameplayView extends Activity implements GameObserver,
 	// });
 	// }
 
-	private ImageButton getImageButtonAtLocation(int row, int column) {
+	protected ImageButton getImageButtonAtLocation(int row, int column) {
 		ImageButton buttonToReturn = null;
 		if (row == 0) {
 			if (column == 0) {
@@ -632,6 +632,10 @@ public class GameplayView extends Activity implements GameObserver,
 		mCurrentGame = currentGame;
 	}
 
+	public TimeoutClock getTimer() {
+		return mTimer;
+	}
+	
 	public void setTimer(TimeoutClock clock) {
 		mTimer = clock;
 	}
@@ -639,13 +643,25 @@ public class GameplayView extends Activity implements GameObserver,
 	public void setBoard(Board board) {
 		mBoard = board;
 	}
+	
+	public Board getBoard() {
+		return mBoard;
+	}
 
 	public void setPlayer1(Player player) {
 		mPlayer1 = player;
 	}
+	
+	public Player getPlayer1() {
+		return mPlayer1;
+	}
 
 	public void setPlayer2(Player player) {
 		mPlayer2 = player;
+	}
+
+	public Player getPlayer2() {
+		return mPlayer2;
 	}
 	
 	public synchronized void updateTimer() {

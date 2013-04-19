@@ -12,37 +12,45 @@
 	<RadioGroup android1:id="@+id/boardSizes"
 		android1:layout_width="wrap_content" android1:layout_height="wrap_content"
 		android1:layout_alignParentLeft="true" android1:layout_below="@+id/textView1"
-		android1:layout_marginLeft="23dp" android1:layout_marginTop="30dp">
+		android1:layout_marginLeft="23dp" android1:layout_marginTop="30dp"
+		android1:onClick="onBoardSizeButtonClicked">
 
 		<RadioButton android1:id="@+id/three"
 			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
-			android1:checked="true" android1:text="3x3" />
+			android1:checked="true" android1:text="3x3"
+			android1:onClick="onBoardSizeButtonClicked" />
 
 		<RadioButton android1:id="@+id/four"
 			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
-			android1:text="4x4" />
+			android1:text="4x4"
+			android1:onClick="onBoardSizeButtonClicked" />
 
 		<RadioButton android1:id="@+id/five"
 			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
-			android1:text="5x5" />
+			android1:text="5x5"
+			android1:onClick="onBoardSizeButtonClicked" />
 	</RadioGroup>
 
 	<RadioGroup android1:id="@+id/timeoutThresholds"
 		android1:layout_width="wrap_content" android1:layout_height="wrap_content"
 		android1:layout_alignParentRight="true" android1:layout_alignTop="@+id/boardSizes"
-		android1:layout_marginRight="20dp">
+		android1:layout_marginRight="20dp"
+		android1:onClick="onTimeoutButtonClicked">
 
 		<RadioButton android1:id="@+id/fifteen" android1:layout_width="wrap_content"
 			android1:layout_height="wrap_content" android1:checked="true"
-			android1:text="15 sec." />
+			android1:text="15 sec."
+			android1:onClick="onTimeoutButtonClicked" />
 
 		<RadioButton android1:id="@+id/thirty"
 			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
-			android1:text="30 sec." />
+			android1:text="30 sec."
+			android1:onClick="onTimeoutButtonClicked" />
 
 		<RadioButton android1:id="@+id/fortyfive"
 			android1:layout_width="wrap_content" android1:layout_height="wrap_content"
-			android1:text="45 sec." />
+			android1:text="45 sec."
+			android1:onClick="onTimeoutButtonClicked" />
 	</RadioGroup>
 
 	<TextView android1:id="@+id/textView2" android1:layout_width="wrap_content"

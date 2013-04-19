@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import edu.uco.sdd.t3.R;
 import edu.uco.sdd.t3.core.Board;
 import edu.uco.sdd.t3.core.Game;
@@ -24,6 +26,7 @@ import edu.uco.sdd.t3.core.GameplayView;
 import edu.uco.sdd.t3.core.MarkerImage;
 import edu.uco.sdd.t3.core.MoveAction;
 import edu.uco.sdd.t3.core.Player;
+import edu.uco.sdd.t3.core.SlideExistingMarker;
 import edu.uco.sdd.t3.core.TimeoutClock;
 
 public class ClientView extends GameplayView {
@@ -137,6 +140,8 @@ public class ClientView extends GameplayView {
 					self.setPlayer1(player1);
 					self.setPlayer2(player2);
 					self.setTimer(timer);
+					self.updateTimer();
+					clockThread.start();
 
 					// Cloud replay button that shows at the end of the game
 					mMainThreadHandler.post(new Runnable() {
@@ -178,11 +183,58 @@ public class ClientView extends GameplayView {
 	
 	@Override
 	public void onMarkerPlaced(final MoveAction action) {
-		super.onMarkerPlaced(action);
-		if (getCurrentGame().getGameState() == Game.State.PLAYER_1_TURN) {
-			// Send data to the hosting player.
-			sendData(action.toXmlString());
+		MarkerImage markerToPlace;
+		int playerId = action.getPlayerId();
+		if (playerId == getPlayer1().getId()) {
+			markerToPlace = getPlayer1().getMarker();
+		} else {
+			markerToPlace = getPlayer2().getMarker();
 		}
+		final Drawable MARKER_IMAGE = markerToPlace.getDrawable();
+		final int ROW = action.getX();
+		final int COLUMN = action.getY();
+		if (getBoard().getPlaceMarkerStrategy().getTag()
+				.equals("SlideExistingMarker")) {
+			final Drawable blankImage = getResources().getDrawable(
+					R.drawable.blank_graphic);
+			SlideExistingMarker strategy = (SlideExistingMarker) getBoard()
+					.getPlaceMarkerStrategy();
+			final ImageButton imageToUpdate = getImageButtonAtLocation(
+					strategy.getPreviousOpenSpotRow(),
+					strategy.getPreviousOpenSpotCol());
+			final ImageButton imageToErase = getImageButtonAtLocation(ROW,
+					COLUMN);
+			Log.d("GameplayView",
+					"Updating image at (" + strategy.getPreviousOpenSpotRow()
+							+ "," + strategy.getPreviousOpenSpotCol() + ")");
+			Log.d("GameplayView", "Erasing image at (" + ROW + "," + COLUMN
+					+ ")");
+			mMainThreadHandler.post(new Runnable() {
+				public void run() {
+					imageToUpdate.setImageDrawable(MARKER_IMAGE);
+					imageToErase.setImageDrawable(blankImage);
+				}
+			});
+		} else {
+			mMainThreadHandler.post(new Runnable() {
+				public void run() {
+					ImageButton imageToUpdate = getImageButtonAtLocation(ROW,
+							COLUMN);
+					imageToUpdate.setImageDrawable(MARKER_IMAGE);
+				}
+			});
+		}
+		if (getCurrentGame().getGameState() == Game.State.PLAYER_1_TURN) {
+			// Send data to our network player.
+			sendData(action.toXmlString());
+			getTimer().stop();
+			getTimer().reset();
+		}
+	}
+	
+	@Override
+	public void onGameOver(final String message) {
+		super.onGameOver(message);
 	}
 	
 	private synchronized void sendData(final String data) {
@@ -204,6 +256,7 @@ public class ClientView extends GameplayView {
 
 	@Override
 	public void onStop() {
+		clockThread.interrupt();
 		// Close the ClientView Socket connection here.
 		if (serverSocket != null) {
 			try {
@@ -227,4 +280,20 @@ public class ClientView extends GameplayView {
 	private ProgressDialog progressDialog;
 	private String serverIp;
 	private Handler mMainThreadHandler = new Handler();
+	
+	private Thread clockThread = new Thread(new Runnable() {
+		public void run() {
+			try {
+				while (true) {
+					if (self.getTimer() == null) {
+						break;
+					}
+					self.updateTimer();
+					Thread.sleep(100);
+				}
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
+	});
 }

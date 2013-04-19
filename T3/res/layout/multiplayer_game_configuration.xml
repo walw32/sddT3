@@ -29,19 +29,22 @@
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
             android1:checked="true"
-            android1:text="3x3" />
+            android1:text="3x3"
+            android1:onClick="onBoardSizeButtonClicked" />
 
         <RadioButton
             android1:id="@+id/four"
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
-            android1:text="4x4" />
+            android1:text="4x4"
+            android1:onClick="onBoardSizeButtonClicked" />
 
         <RadioButton
             android1:id="@+id/five"
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
-            android1:text="5x5" />
+            android1:text="5x5"
+            android1:onClick="onBoardSizeButtonClicked" />
     </RadioGroup>
 
     <TextView
@@ -67,19 +70,22 @@
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
             android1:checked="true"
-            android1:text="15 sec." />
+            android1:text="15 sec."
+            android1:onClick="onTimeoutButtonClicked" />
 
         <RadioButton
             android1:id="@+id/thirty"
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
-            android1:text="30 sec." />
+            android1:text="30 sec."
+            android1:onClick="onTimeoutButtonClicked" />
 
         <RadioButton
             android1:id="@+id/fortyfive"
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
-            android1:text="45 sec." />
+            android1:text="45 sec."
+            android1:onClick="onTimeoutButtonClicked" />
     </RadioGroup>
 
     <TextView
@@ -153,13 +159,15 @@
             android1:id="@+id/manVsManButton"
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
-            android1:text="Man vs. Man" />
+            android1:text="Man vs. Man"
+            android1:onClick="onGameTypeSelected" />
 
         <RadioButton
             android1:id="@+id/aiVsAiButton"
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
-            android1:text="AI vs. AI" />
+            android1:text="AI vs. AI"
+            android1:onClick="onGameTypeSelected" />
     </RadioGroup>
 
     <TextView

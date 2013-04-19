@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
@@ -59,6 +60,7 @@ public class MainMenu extends Activity {
 			threshold = 45;
 			break;
 		}
+		Log.d("MainMenu", "Threshold changed to " + threshold);
 		return true;
 	}
 	
@@ -75,6 +77,7 @@ public class MainMenu extends Activity {
 			gameSize = 5;
 			break;
 		}
+		Log.d("MainMenu", "Board size changed to " + gameSize);
 		return true;
 	}
 	
@@ -88,6 +91,7 @@ public class MainMenu extends Activity {
 			gameType = 3;
 			break;
 		}
+		Log.d("MainMenu", "Game type changed to " + gameType);
 		return true;
 	}
 	
