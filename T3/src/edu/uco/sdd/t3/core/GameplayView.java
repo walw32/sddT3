@@ -647,6 +647,25 @@ public class GameplayView extends Activity implements GameObserver,
 	public void setPlayer2(Player player) {
 		mPlayer2 = player;
 	}
+	
+	public synchronized void updateTimer() {
+		if (mTimer == null) {
+			return;
+		}
+		mHandler.post(new Runnable() {
+			public void run() {
+				String text = Math.round(mTimer.getCurrentTime() / 1000.0)
+						+ "s.";
+				TextView timerText = (TextView) findViewById(R.id.timerText);
+				// If our timer isn't visible on the screen,
+				// let's make it visible.
+				if (!timerText.isShown()) {
+					timerText.setVisibility(View.VISIBLE);
+				}
+				timerText.setText(text);
+			}
+		});
+	}
 
 	private int replayCounter = 0;
 	private String gameHistory;
@@ -672,19 +691,7 @@ public class GameplayView extends Activity implements GameObserver,
 					if (mTimer == null) {
 						break;
 					}
-					mHandler.post(new Runnable() {
-						public void run() {
-							String text = Math.round(mTimer.getCurrentTime() / 1000.0)
-									+ "s.";
-							TextView timerText = (TextView) findViewById(R.id.timerText);
-							// If our timer isn't visible on the screen,
-							// let's make it visible.
-							if (!timerText.isShown()) {
-								timerText.setVisibility(View.VISIBLE);
-							}
-							timerText.setText(text);
-						}
-					});
+					updateTimer();
 					Thread.sleep(100);
 				}
 			} catch (InterruptedException ex) {
